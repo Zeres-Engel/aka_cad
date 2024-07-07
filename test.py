@@ -42,3 +42,5 @@ def main():
     sw = SVGWriter()
     sw.write_packgroup(pgrp)
     sw.save()
+
+main()

@@ -21,6 +21,7 @@ PYBIND11_MODULE(aka_cad, m)
 
     py::class_<Point>(m, "Point", "2D Point")
         .def(py::init<int, int>(),  py::arg("x"), py::arg("y"))
+        //.def_property_readonly("x", &Point::X)
         .def_property_readonly("x", [](const Point &p) { return p.X; })
         .def_property_readonly("y", [](const Point &p) { return p.Y; })
         .def("__repr__",
@@ -39,12 +40,17 @@ PYBIND11_MODULE(aka_cad, m)
             }
         );
 
+    // see lib/libnest2d/include/libnest2d/geometry_traits.hpp
     py::class_<Box>(m, "Box", "2D Box point pair")
+        //.def(py::init<int, int>())
+        // custom constructor to define box center
         .def(py::init([](int x, int y) {
             return std::unique_ptr<Box>(new Box(x, y, {x/2, y/2}));
         }))
         ;
 
+    // Item is a shape defined by points
+    // see lib/libnest2d/include/libnest2d/nester.hpp
     py::class_<Item>(m, "Item", "An item to be placed on a bin.")
         .def(py::init<std::vector<Point>>())
         .def("__repr__",
@@ -74,6 +80,8 @@ PYBIND11_MODULE(aka_cad, m)
                 //py::print("vertices: ", itm.vertexCount());
             }
 
+            //return pgrp;
+            // we need to convert c++ type to python using py::cast
             py::object obj = py::cast(pgrp);
             return obj;
         },
@@ -85,19 +93,20 @@ PYBIND11_MODULE(aka_cad, m)
 
     py::class_<SVGWriter>(m, "SVGWriter", "SVGWriter tools to write pack_group to SVG.")
         .def(py::init([]() {
+            // custom constructor
             SVGWriter::Config conf;
             conf.mm_in_coord_units = libnest2d::mm();
             return std::unique_ptr<SVGWriter>(new SVGWriter(conf));
         }))
-        .def("write_packgroup", [](SVGWriter & sw, the PackGroup & pgrp) {
-            sw.setSize(Box(libnest2d::mm(250), libnest2d::mm(210)));
+        .def("write_packgroup", [](SVGWriter & sw, const PackGroup & pgrp) {
+            sw.setSize(Box(libnest2d::mm(250), libnest2d::mm(210)));  // TODO make own call
             sw.writePackGroup(pgrp);
         })
         .def("save", [](SVGWriter & sw) {
             sw.save("out");
         })
         .def("__repr__",
-             [](the SVGWriter &sw) {
+             [](const SVGWriter &sw) {
                  std::string r("SVGWriter(");
                  r += ")";
                  return r;
