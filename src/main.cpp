@@ -6,7 +6,6 @@
 #include "../tools/printer_parts.hpp"
 #include "../tools/svgtools.hpp"
 
-
 namespace py = pybind11;
 
 using Point = libnest2d::Point;
@@ -34,20 +33,27 @@ PYBIND11_MODULE(aka_cad, m)
                  return r;
              }
         )
-        .def("__eq__",
-            [](const Point &p, const Point & q) {
-                return p == q;
-            }
-        );
+        .def("__eq__", [](const Point &p, const Point &q) { return p == q; });
 
     // see lib/libnest2d/include/libnest2d/geometry_traits.hpp
-    py::class_<Box>(m, "Box", "2D Box point pair")
-        //.def(py::init<int, int>())
-        // custom constructor to define box center
-        .def(py::init([](int x, int y) {
-            return std::unique_ptr<Box>(new Box(x, y, {x/2, y/2}));
-        }))
-        ;
+    py::class_<Box>(m, "Box")
+        .def(py::init([](int width, int height) {
+            // Giữ lại cách tạo đối tượng Box với trung tâm là trung điểm của hộp
+            return std::unique_ptr<Box>(new Box(width, height, {width / 2, height / 2}));
+        }), py::arg("width"), py::arg("height"))
+        .def("width", [](const Box& box) {
+            // Chuyển đổi width sang string sử dụng boost::lexical_cast
+            return boost::lexical_cast<std::string>(box.width());
+        }, "Returns the width of the box as a string")
+        .def("height", [](const Box& box) {
+            // Chuyển đổi height sang string sử dụng boost::lexical_cast
+            return boost::lexical_cast<std::string>(box.height());
+        }, "Returns the height of the box as a string")
+        .def("area", [](const Box& box) {
+            // Chuyển đổi area sang string sử dụng boost::lexical_cast
+            return boost::lexical_cast<std::string>(box.area());
+        }, "Returns the area of the box as a string");
+
 
     // Item is a shape defined by points
     // see lib/libnest2d/include/libnest2d/nester.hpp
@@ -65,52 +71,85 @@ PYBIND11_MODULE(aka_cad, m)
                  return r;
              }
         )
-        ;
 
-    // The nest function takes two parameters input and box
-    // see lib/libnest2d/include/libnest2d/libnest2d.hpp
-    m.def("nest", [](std::vector<Item>& input, const Box& box) {
-            size_t bins = libnest2d::nest(input, box);
+        .def_property_readonly("area", 
+            [](const Item &i) { return boost::lexical_cast<std::string>(i.area()); }, 
+            "Returns the area of the item as a string.")
+        .def_property_readonly("bin_id", 
+            [](const Item &i) { return boost::lexical_cast<std::string>(i.binId()); }, 
+            "Returns the bin ID of the item as a string.")
+        .def_property_readonly("vertex_count", 
+            [](const Item &i) { return boost::lexical_cast<std::string>(i.vertexCount()); }, 
+            "Returns the number of vertices of the item as a string.")
+        .def_property_readonly("translation",
+            [](const Item &i) {
+                auto translation = i.translation();
+                return std::make_pair(libnest2d::getX(translation), libnest2d::getY(translation));
+            },
+            "Returns the translation vector as a tuple (x, y).")
+        .def_property_readonly("rotation",
+            [](const Item &i) {
+                return static_cast<double>(i.rotation());  // Giả sử Radians có thể chuyển đổi sang double
+            },
+            "Returns the rotation angle in radians.")
 
-            PackGroup pgrp(bins);
 
-            for (Item &itm : input) {
-                if (itm.binId() >= 0) pgrp[size_t(itm.binId())].emplace_back(itm);
-                //py::print("bin_id: ", itm.binId());
-                //py::print("vertices: ", itm.vertexCount());
-            }
+        .def("transformed_vertices",
+             [](const Item &item) {
+                 std::vector<std::pair<int, int>> vertices;
+                 const auto &shape = item.transformedShape();
 
-            //return pgrp;
-            // we need to convert c++ type to python using py::cast
-            py::object obj = py::cast(pgrp);
-            return obj;
-        },
-        py::arg("input"),
-        py::arg("box"),
-        "Nest and pack the input items into the box bin."
+                 namespace sl = libnest2d::shapelike;
+                 for (auto it = sl::cbegin(shape); it != sl::cend(shape); ++it) {
+                     vertices.emplace_back(libnest2d::getX(*it), libnest2d::getY(*it));
+                 }
+                 return vertices;
+             },
+             "Returns a list of tuples representing the coordinates of all vertices after transformation."
         )
-        ;
+        .def("raw_vertices",
+             [](const Item &item) {
+                 std::vector<std::pair<int, int>> vertices;
+                 const auto &shape = item.rawShape();
 
-    py::class_<SVGWriter>(m, "SVGWriter", "SVGWriter tools to write pack_group to SVG.")
-        .def(py::init([]() {
-            // custom constructor
-            SVGWriter::Config conf;
-            conf.mm_in_coord_units = libnest2d::mm();
-            return std::unique_ptr<SVGWriter>(new SVGWriter(conf));
-        }))
-        .def("write_packgroup", [](SVGWriter & sw, const PackGroup & pgrp) {
-            sw.setSize(Box(libnest2d::mm(250), libnest2d::mm(210)));  // TODO make own call
-            sw.writePackGroup(pgrp);
-        })
-        .def("save", [](SVGWriter & sw) {
-            sw.save("out");
-        })
-        .def("__repr__",
-             [](const SVGWriter &sw) {
-                 std::string r("SVGWriter(");
-                 r += ")";
-                 return r;
-             }
+                 namespace sl = libnest2d::shapelike;
+                 for (auto it = sl::cbegin(shape); it != sl::cend(shape); ++it) {
+                     vertices.emplace_back(libnest2d::getX(*it), libnest2d::getY(*it));
+                 }
+                 return vertices;
+             },
+             "Returns a list of tuples representing the coordinates of all raw vertices."
         );
 
+    m.def("nest", [](std::vector<Item>& input, std::vector<Box>& boxes) {
+            std::vector<Item> output;
+            for (size_t i = 0; i < boxes.size(); i++) {
+                size_t bins = nest(input, boxes[i]);
+                std::vector<Item> remainingItems;
+
+                for (Item& itm : input) {
+                    if (itm.binId() >= 0 && itm.binId() < bins) {
+                        itm.binId(i);  // Set the binId to the current box index
+                        output.emplace_back(itm);  // Add the item to the output vector
+                    } else {
+                        remainingItems.emplace_back(itm);  // Add to remaining items for the next iteration
+                    }
+                }
+
+                input = std::move(remainingItems);  // Update input with remaining items
+            }
+
+            // Handle items that couldn't be nested in any bin
+            for (Item& itm : input) {
+                itm.binId(-1);  // Indicate that the item did not fit in any bin
+                output.emplace_back(itm);  // Add to output as overflow
+            }
+
+            return output;
+        },
+        py::return_value_policy::copy,
+        py::arg("input"), 
+        py::arg("boxes"),
+        "Nest and pack the input items into the provided list of box bins, handling overflow."
+        );
 }

@@ -1,33 +1,23 @@
-import cv2
+from src import Nester, Object, Material
 import numpy as np
-# from aka_cad import Point, Item, Box, nest, SVGWriter
-from utils import get_polygon_from_img, get_polygon_from_svg
-
-
-def add_objs(polygon, items, scale_factor=20000, num_copies=1):
-    for i in range(num_copies):
-        points = [Point(int(x * scale_factor), int(y * scale_factor)) for [x, y] in polygon]
-        for [x, y] in polygon:
-            print([x, y])
-        print("----------------------------")
-        item = Item(points)
-        items.append(item)
+from utils import export_nest_map, export_raw_svg
 
 def main():
-    input_items = []
-    add_objs(get_polygon_from_img('/app/aka_cad/data/obj1.png'), input_items, scale_factor=200000, num_copies=5)
-    add_objs(get_polygon_from_img('/app/aka_cad/data/obj4_0.png'), input_items, scale_factor=200000, num_copies=5)
-    add_objs(get_polygon_from_img('/app/aka_cad/data/obj3.png'), input_items, scale_factor=200000, num_copies=6)
-    add_objs(get_polygon_from_img('/app/aka_cad/data/obj2.png'), input_items, scale_factor=200000, num_copies=8)
+    nester = Nester()
+    print("Setting materials...")
+    nester.add_material(Material(width=1000, height=1000))
+    nester.add_material(Material(width=200, height=200))
 
-    material_box = Box(150000000, 150000000)
+    print("Adding objects...")
     
-    pgrp = nest(input_items, material_box)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj1.svg'), num_copies=4)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj2.svg'), num_copies=5)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj3.svg'), num_copies=3)
     
-    sw = SVGWriter()
-    sw.write_packgroup(pgrp)
-    sw.save()
+    print("Nesting objects...")
+    nester.nest()
+    nester.export_map()
+    nester.export_svg()
 
 if __name__ == "__main__":
-    # main()
-    print(get_polygon_from_svg('data\obj1.svg'))
+    main()
