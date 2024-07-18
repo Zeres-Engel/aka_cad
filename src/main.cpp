@@ -107,6 +107,19 @@ PYBIND11_MODULE(aka_cad, m)
              },
              "Returns a list of tuples representing the coordinates of all vertices after transformation."
         )
+        .def("item_id",
+            [](const Item &item) {
+                std::string item_id;
+                const auto &shape = item.rawShape();
+
+                namespace sl = libnest2d::shapelike;
+                for (auto it = sl::cbegin(shape); it != sl::cend(shape); ++it) {
+                    item_id += "(" + std::to_string(libnest2d::getX(*it)) + "," + std::to_string(libnest2d::getY(*it)) + ")";
+                }
+                return item_id;
+            },
+            "Returns a string representing the coordinates of all raw vertices to use as an item ID."
+        )
         .def("raw_vertices",
              [](const Item &item) {
                  std::vector<std::pair<int, int>> vertices;
@@ -122,34 +135,48 @@ PYBIND11_MODULE(aka_cad, m)
         );
 
     m.def("nest", [](std::vector<Item>& input, std::vector<Box>& boxes) {
-            std::vector<Item> output;
-            for (size_t i = 0; i < boxes.size(); i++) {
-                size_t bins = nest(input, boxes[i]);
-                std::vector<Item> remainingItems;
+        std::vector<Item> output;
+        for (size_t i = 0; i < boxes.size(); i++) {
+            nest(input, boxes[i]); // Giả sử nest này làm việc với binId của mỗi Item
+            std::vector<Item> remainingItems;
 
-                for (Item& itm : input) {
-                    if (itm.binId() >= 0 && itm.binId() < bins) {
-                        itm.binId(i);  // Set the binId to the current box index
-                        output.emplace_back(itm);  // Add the item to the output vector
-                    } else {
-                        remainingItems.emplace_back(itm);  // Add to remaining items for the next iteration
-                    }
-                }
-
-                input = std::move(remainingItems);  // Update input with remaining items
-            }
-
-            // Handle items that couldn't be nested in any bin
             for (Item& itm : input) {
-                itm.binId(-1);  // Indicate that the item did not fit in any bin
-                output.emplace_back(itm);  // Add to output as overflow
+                if (itm.binId() == 0) {
+                    itm.binId(i);
+                    output.emplace_back(itm);
+                } else {
+                    remainingItems.emplace_back(itm);
+                }
             }
 
-            return output;
-        },
-        py::return_value_policy::copy,
-        py::arg("input"), 
-        py::arg("boxes"),
-        "Nest and pack the input items into the provided list of box bins, handling overflow."
-        );
+            input = std::move(remainingItems);
+        }
+
+        for (Item& itm : input) {
+            itm.binId(-1);
+            output.emplace_back(itm);
+        }
+
+        // Helper function to generate item_id
+        auto generateItemId = [](const Item& item) {
+            std::string item_id;
+            const auto& shape = item.rawShape();
+            for (auto it = libnest2d::shapelike::cbegin(shape); it != libnest2d::shapelike::cend(shape); ++it) {
+                item_id += "(" + std::to_string(libnest2d::getX(*it)) + "," + std::to_string(libnest2d::getY(*it)) + ")";
+            }
+            return item_id;
+        };
+
+        // Sort output based on item_id
+        std::sort(output.begin(), output.end(), [&generateItemId](const Item& a, const Item& b) {
+            return generateItemId(a) < generateItemId(b);
+        });
+
+        return output;
+    },
+    py::return_value_policy::reference_internal,
+    py::arg("input"), 
+    py::arg("boxes"),
+    "Nest and pack the input items into the provided list of box bins, and sort them by item_id."
+    );
 }

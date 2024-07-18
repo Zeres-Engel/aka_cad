@@ -6,14 +6,15 @@ def main():
     nester = Nester()
     print("Setting materials...")
     nester.add_material(Material(width=1000, height=1000))
-    nester.add_material(Material(width=200, height=200))
+    nester.add_material(Material(width=800, height=1000))
+    nester.add_material(Material(width=800, height=600))
 
     print("Adding objects...")
-    
-    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj1.svg'), num_copies=4)
-    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj2.svg'), num_copies=5)
-    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj3.svg'), num_copies=3)
-    
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj1.svg'), num_copies=13)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj2.svg'), num_copies=26)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj3.svg'), num_copies=18)
+    nester.add_object(Object(img_path='/app/aka_cad/data/objects/obj4.svg'), num_copies=29)
+
     print("Nesting objects...")
     nester.nest()
     nester.export_map()
@@ -21,3 +22,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # test()
