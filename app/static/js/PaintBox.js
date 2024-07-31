@@ -26,7 +26,7 @@ MD.PaintBox = function(container, type){
       { 
         paint: paint,
         window: { pickerTitle: title },
-        images: { clientPath: 'images/' },
+        images: { clientPath: 'static/images/' },
         newstop: 'inverse'
       },
       function(p) {
