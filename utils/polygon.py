@@ -41,3 +41,39 @@ def get_polygon(path, epsilon_ratio=0.02, sort_clockwise=True):
     aligned_polygon = align_edges(sorted_points)
     
     return aligned_polygon
+
+def get_polygon_from_path(path_element, epsilon_ratio=0.02, sort_clockwise=True):
+    points = np.array([[segment.start.real, segment.start.imag] for segment in path_element] +
+                      [[segment.end.real, segment.end.imag] for segment in path_element])
+    unique_points = np.unique(points, axis=0)
+
+    # Ensure unique_points is in the correct data type for convexHull
+    unique_points = np.array(unique_points, dtype=np.float32)  # Convert to float32
+
+    # Compute the convex hull of the points
+    convex_hull = cv2.convexHull(unique_points)
+
+    # Ensure the convex_hull is properly shaped for sorting (remove any extra dimensions)
+    if convex_hull.ndim > 2:
+        convex_hull = convex_hull.reshape(-1, 2)
+
+    # Sort the points of the convex hull, if necessary
+    sorted_points = sort_points(convex_hull, clockwise=sort_clockwise)
+
+    # Align the edges based on the sorted points
+    aligned_polygon = align_edges(sorted_points)
+    
+    return aligned_polygon
+
+def get_mul_polygon(path, epsilon_ratio=0.02, sort_clockwise=True):
+    if not path.endswith(".svg"):
+        raise ValueError("Path must be an SVG file")
+
+    paths, attributes = svg2paths(path)
+    polygons = []
+    
+    for path_element in paths:
+        aligned_polygon = get_polygon_from_path(path_element, epsilon_ratio, sort_clockwise)
+        polygons.append(aligned_polygon)
+        
+    return polygons

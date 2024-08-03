@@ -5337,6 +5337,29 @@ this.open = function() {
   // Nothing by default, handled by optional widget/extension
 };
 
+this.save_ser = function() {
+  clearSelection();
+  var str = this.svgCanvasToString();
+  var illustratorCompat = true;
+  if (illustratorCompat && str.includes(" href=")) {
+    str = str.replace(" href=", " xlink:href=");
+  }
+
+  // Gửi dữ liệu SVG tới server qua AJAX
+  $.ajax({
+    type: 'POST',
+    url: '/save-svg',  // Địa chỉ API trên server của bạn
+    data: JSON.stringify({ svg: str }),
+    contentType: 'application/json; charset=utf-8',
+    success: function(response) {
+      alert('SVG has been saved successfully to the server!');
+    },
+    error: function(xhr, status, error) {
+      alert('Error saving SVG to the server: ' + error);
+    }
+  });
+};
+
 // Function: save
 // Serializes the current drawing into SVG XML text and returns it to the 'saved' handler.
 // This function also includes the XML prolog.  Clients of the SvgCanvas bind their save

@@ -65,7 +65,7 @@ class Nester:
         poly_color = (255, 112, 29)  # Converted from #ff701d
         for index in self.nest_result:
             data = self.nest_result[index]
-            filename = f'raw_{index}.svg'
+            filename = f'output/raw_{index}.svg'
             export_raw_svg(data['vertices_list'], data['img_paths'], data['translations'], data['rotations'], 
                            self.materials[index], filename, poly_color=poly_color)
 

@@ -901,6 +901,12 @@ window.methodDraw = function() {
       flash($('#file_menu'));
       svgCanvas.save();
     };
+
+    var clickNest = function() {
+      flash($('#file_menu')); // Hiệu ứng khi nhấp vào nút, giống như khi bạn nhấn lưu
+      svgCanvas.save_ser(); // Gọi hàm save_ser thay vì save
+    };
+    
     
     var saveSourceEditor = function(){
       if (!editingsource) return;
@@ -1453,6 +1459,10 @@ window.methodDraw = function() {
         {sel:'#tool_zoom', fn: clickZoom, evt: 'mouseup', key: ['Z', true]},
         {sel:'#tool_clear', fn: clickClear, evt: 'mouseup', key: [modKey + 'N', true]},
         {sel:'#tool_save', fn: function() { editingsource ? saveSourceEditor(): clickSave() }, evt: 'mouseup', key: [modKey + 'S', true]},
+        
+        // Thêm sự kiện mới cho clickNest
+        {sel:'#nest_button', fn: clickNest, evt: 'click', key: [modKey + 'E', true]},
+        
         {sel:'#tool_export', fn: clickExport, evt: 'mouseup'},
         {sel:'#tool_open', fn: clickOpen, evt: 'mouseup'},
         {sel:'#tool_import', fn: clickImport, evt: 'mouseup'},
