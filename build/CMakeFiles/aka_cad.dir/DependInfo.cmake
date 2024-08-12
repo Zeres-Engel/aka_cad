@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/app/src/main.cpp" "/app/build/CMakeFiles/aka_cad.dir/src/main.cpp.o"
+  "/app/aka_cad/src/main.cpp" "/app/aka_cad/build/CMakeFiles/aka_cad.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

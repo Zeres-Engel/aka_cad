@@ -94,7 +94,7 @@ add_library(Libnest2D::libnest2d_headeronly INTERFACE IMPORTED)
 
 set_target_properties(Libnest2D::libnest2d_headeronly PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "LIBNEST2D_THREADING_std;LIBNEST2D_GEOMETRIES_clipper;LIBNEST2D_OPTIMIZER_nlopt"
-  INTERFACE_INCLUDE_DIRECTORIES "/app/lib/libnest2d/include"
+  INTERFACE_INCLUDE_DIRECTORIES "/app/aka_cad/lib/libnest2d/include"
   INTERFACE_LINK_LIBRARIES "Libnest2D::stdThreading;Libnest2D::clipperBackend;Libnest2D::nloptOptimizer"
 )
 

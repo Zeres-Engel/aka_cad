@@ -1,4 +1,4 @@
-# Install script for directory: /app/lib/libnest2d/include/libnest2d/optimizers/nlopt
+# Install script for directory: /app/aka_cad/lib/libnest2d/include/libnest2d/optimizers/nlopt
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

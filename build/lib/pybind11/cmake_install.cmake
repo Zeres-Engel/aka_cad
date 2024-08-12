@@ -1,4 +1,4 @@
-# Install script for directory: /app/lib/pybind11
+# Install script for directory: /app/aka_cad/lib/pybind11
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

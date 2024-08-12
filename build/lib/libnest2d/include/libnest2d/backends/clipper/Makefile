@@ -23,9 +23,6 @@ SUFFIXES =
 .SUFFIXES: .hpux_make_needs_suffix_list
 
 
-# Produce verbose output by default.
-VERBOSE = 1
-
 # Suppress display of executed commands.
 $(VERBOSE).SILENT:
 
@@ -51,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /app
+CMAKE_SOURCE_DIR = /app/aka_cad
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /app/build
+CMAKE_BINARY_DIR = /app/aka_cad/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -129,14 +126,14 @@ install/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /app/build && $(CMAKE_COMMAND) -E cmake_progress_start /app/build/CMakeFiles /app/build/lib/libnest2d/include/libnest2d/backends/clipper/CMakeFiles/progress.marks
-	cd /app/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /app/build/CMakeFiles 0
+	cd /app/aka_cad/build && $(CMAKE_COMMAND) -E cmake_progress_start /app/aka_cad/build/CMakeFiles /app/aka_cad/build/lib/libnest2d/include/libnest2d/backends/clipper/CMakeFiles/progress.marks
+	cd /app/aka_cad/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /app/aka_cad/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /app/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/clean
+	cd /app/aka_cad/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/clean
 .PHONY : clean
 
 # The main clean target
@@ -146,17 +143,17 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /app/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/preinstall
+	cd /app/aka_cad/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /app/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/preinstall
+	cd /app/aka_cad/build && $(MAKE) -f CMakeFiles/Makefile2 lib/libnest2d/include/libnest2d/backends/clipper/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /app/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /app/aka_cad/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Help Target
@@ -182,6 +179,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /app/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /app/aka_cad/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

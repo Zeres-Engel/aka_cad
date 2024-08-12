@@ -386,7 +386,7 @@ optional
 variant
 -
 
-/app/src/main.cpp
+/app/aka_cad/src/main.cpp
 pybind11/pybind11.h
 -
 pybind11/stl.h
@@ -394,9 +394,9 @@ pybind11/stl.h
 libnest2d/libnest2d.hpp
 -
 ../tools/printer_parts.hpp
-/app/tools/printer_parts.hpp
+/app/aka_cad/tools/printer_parts.hpp
 ../tools/svgtools.hpp
-/app/tools/svgtools.hpp
+/app/aka_cad/tools/svgtools.hpp
 
 /usr/include/polyclipping/clipper.hpp
 vector

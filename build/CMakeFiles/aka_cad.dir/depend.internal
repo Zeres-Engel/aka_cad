@@ -38,7 +38,7 @@ CMakeFiles/aka_cad.dir/src/main.cpp.o
  ../lib/pybind11/include/pybind11/pybind11.h
  ../lib/pybind11/include/pybind11/pytypes.h
  ../lib/pybind11/include/pybind11/stl.h
- /app/src/main.cpp
+ /app/aka_cad/src/main.cpp
  /usr/include/polyclipping/clipper.hpp
  /usr/local/include/python3.8/Python.h
  /usr/local/include/python3.8/abstract.h

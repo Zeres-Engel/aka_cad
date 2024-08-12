@@ -6,9 +6,9 @@ import bisect
 
 class Nester:
     def __init__(self):
-        self.materials = []  # Danh sách các Materials
-        self.objects = []  # Danh sách các Objects, được sắp xếp theo item_id
-        self.nest_result = {}  # Từ điển lưu trữ kết quả chuẩn bị dữ liệu
+        self.materials = []
+        self.objects = []
+        self.nest_result = {}
 
     def add_material(self, material, num_copies=1):
         """Add a pre-configured Material object to the list, optionally multiple copies."""
