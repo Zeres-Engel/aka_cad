@@ -32,12 +32,8 @@ COPY . /app/aka_cad
 # Change working directory to where CMakeLists.txt is located
 WORKDIR /app/aka_cad
 
-# Clone the specific versions of libnest2d and pybind11, and build the project in one layer
-RUN git clone https://github.com/tamasmeszaros/libnest2d.git /app/aka_cad/lib/libnest2d && \
-    git -C /app/aka_cad/lib/libnest2d checkout 5bfee03f5cea6bec2b30c41b2763f5e016d413a8 && \
-    git clone https://github.com/pybind/pybind11.git /app/aka_cad/lib/pybind11 && \
-    git -C /app/aka_cad/lib/pybind11 checkout 6e39b765b2333cd191001f22fe57ea218bd6ccf2 && \
-    mkdir build && cd build && \
+# Build the project using the pre-existing sources of libnest2d and pybind11
+RUN mkdir build && cd build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=$(which python3) && \
     cmake --build . --config Release -- -j2
 
