@@ -77,7 +77,7 @@ MD.Shapelib = function(){
     
     if(!lib) {
       $('#shape_buttons').html('Loading...');
-      $.getJSON('shapelib/' + cat_id + '.json', function(result, textStatus) {
+      $.getJSON('/static/js/shapelib/' + cat_id + '.json', function(result, textStatus) {
         cur_lib = library[cat_id] = {
           data: result.data,
           size: result.size,

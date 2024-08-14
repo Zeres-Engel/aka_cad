@@ -48,7 +48,7 @@ var curConfig = {
   dimensions: [800, 600],
   initFill: {color: 'fff', opacity: 1},
   initStroke: {width: 1, color: '000', opacity: 1},
-  imgPath: 'images/',
+  imgPath: 'static/images/',
   baseUnit: 'px',
   defaultFont: "Noto Sans JP"
 };
