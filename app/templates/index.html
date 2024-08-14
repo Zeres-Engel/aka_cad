@@ -261,6 +261,28 @@
       </label>
     </div>
   </div>
+
+  <div id="rect_panel" class="context_panel">
+    <h4>Rectangle</h4>
+    <div class="draginputs">
+      <label class="draginput">
+        <input id="rect_x" class="attr_changer" data-title="Change X coordinate" data-attr="x" pattern="[0-9]*" />
+        <span>X</span> 
+      </label>
+      <label class="draginput">
+        <input id="rect_y" class="attr_changer" data-title="Change Y coordinate" data-attr="y" pattern="[0-9]*" />
+        <span>Y</span> 
+      </label>
+      <label  class="draginput" id="rect_width_tool attr_changer" data-title="Change rectangle width">
+        <input id="rect_width" class="attr_changer" data-attr="width" type="text" pattern="[0-9]*" />
+        <span class="icon_label">Width</span>
+      </label>
+      <label  class="draginput" id="rect_height_tool" data-title="Change rectangle height">
+        <input id="rect_height" class="attr_changer" data-attr="height" type="text" pattern="[0-9]*" />
+        <span class="icon_label">Height</span>
+      </label>
+    </div>
+  </div>
   
   <div id="path_panel" class="context_panel clearfix">
       <h4>Path</h4>
@@ -664,7 +686,7 @@
   </div>
 
   <!-- Nesting Tool Button -->
-  <div class="tool_button" id="tool_nesting" data-mode="nesting" title="Nesting Tool [N]">
+  <div class="tool_button" id="tool_nest" data-mode="nest" title="Nesting Tool [N]">
     <svg viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
       <ellipse cx="5" cy="5" rx="5" ry="5"></ellipse>
       <path d="M 0 10 L 0 20 L 20 20 L 20 0 L 10 0 L 10 10 L 0 10 Z"></path>
@@ -813,7 +835,6 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/paste.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/modals.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/start.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/nest.js') }}"></script>
 <!-- endbuild -->
 
 </body>

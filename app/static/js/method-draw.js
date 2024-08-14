@@ -540,6 +540,14 @@ window.methodDraw = function() {
       }
     }
 
+    var clickNestingTool = function(){
+      if (toolButtonClick('#tool_nest')) {
+        svgCanvas.setMode('nest');
+      }
+    };
+    
+    
+
     // Delete is a contextual tool that only appears in the ribbon if
     // an element has been selected
     var deleteSelected = function() {
@@ -1451,6 +1459,9 @@ window.methodDraw = function() {
         {sel:'#tool_path', fn: clickPath, evt: 'click', key: ['P', true]},
         {sel:'#tool_text', fn: clickText, evt: 'click', key: ['T', true]},
         {sel:'#tool_zoom', fn: clickZoom, evt: 'mouseup', key: ['Z', true]},
+
+        {sel:'#tool_nest', fn: clickNestingTool, evt: 'click', key: ['N', true]},
+
         {sel:'#tool_clear', fn: clickClear, evt: 'mouseup', key: [modKey + 'N', true]},
         {sel:'#tool_save', fn: function() { editingsource ? saveSourceEditor(): clickSave() }, evt: 'mouseup', key: [modKey + 'S', true]},
         {sel:'#tool_export', fn: clickExport, evt: 'mouseup'},
