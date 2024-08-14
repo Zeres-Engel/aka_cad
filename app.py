@@ -1,10 +1,18 @@
-from flask import Flask, render_template
+from src import Nester, Material, Object
 
-app = Flask(__name__, static_folder='app/static', template_folder='app/templates')
+def main():
+    material = Material(width=1000, height=1000,)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+    nester = Nester()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    nester.add_material(material)
+    
+    ob1 = Object(img_path='data/obj1.jpg')
+    
+    nester.add_object(ob1, num_copies=17)
+    nester.nest()
+    nester.export_map()
+
+
+if __name__ == "__main__":
+    main()
