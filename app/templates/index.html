@@ -262,28 +262,37 @@
     </div>
   </div>
 
-  <div id="rect_panel" class="context_panel">
-    <h4>Rectangle</h4>
+  <div id="nest_panel" class="context_panel">
+    <h4>Nest</h4>
     <div class="draginputs">
-      <label class="draginput">
-        <input id="rect_x" class="attr_changer" data-title="Change X coordinate" data-attr="x" pattern="[0-9]*" />
-        <span>X</span> 
-      </label>
-      <label class="draginput">
-        <input id="rect_y" class="attr_changer" data-title="Change Y coordinate" data-attr="y" pattern="[0-9]*" />
-        <span>Y</span> 
-      </label>
-      <label  class="draginput" id="rect_width_tool attr_changer" data-title="Change rectangle width">
-        <input id="rect_width" class="attr_changer" data-attr="width" type="text" pattern="[0-9]*" />
-        <span class="icon_label">Width</span>
-      </label>
-      <label  class="draginput" id="rect_height_tool" data-title="Change rectangle height">
-        <input id="rect_height" class="attr_changer" data-attr="height" type="text" pattern="[0-9]*" />
-        <span class="icon_label">Height</span>
-      </label>
+        <label class="draginput">
+            <input id="nest_x" class="attr_changer" data-title="Change X coordinate" data-attr="x" pattern="[0-9]*" />
+            <span>X</span> 
+        </label>
+        <label class="draginput">
+            <input id="nest_y" class="attr_changer" data-title="Change Y coordinate" data-attr="y" pattern="[0-9]*" />
+            <span>Y</span> 
+        </label>
+        <label class="draginput">
+            <input id="nest_width" class="attr_changer" data-attr="width" type="text" pattern="[0-9]*" />
+            <span>Width</span>
+        </label>
+        <label class="draginput">
+            <input id="nest_height" class="attr_changer" data-attr="height" type="text" pattern="[0-9]*" />
+            <span>Height</span>
+        </label>
+        <label class="draginput">
+            <input id="nest_machine" class="attr_changer" data-attr="machine" type="text" pattern="^0(\.\d+)?|1(\.0+)?$" />
+            <span>Machine</span>
+        </label>
+        <label class="draginput">
+            <input id="nest_area" type="text" readonly value="0%" />
+            <span>Area Used</span>
+        </label>
+        <button id="nesting_button" class="draginput twocol textcontent" type="button">Nesting</button>
     </div>
   </div>
-  
+
   <div id="path_panel" class="context_panel clearfix">
       <h4>Path</h4>
       <div class="draginputs">

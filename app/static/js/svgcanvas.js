@@ -2446,7 +2446,9 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             "height": 0,
             "id": getNextId(),
             "opacity": cur_shape.opacity / 2,
-            "fill": "#f0ad4e"
+            "fill": "#f0ad4e",
+            "target": "bin",
+            "machine": 1.0
           }
         });
         break;

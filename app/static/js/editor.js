@@ -413,8 +413,8 @@ MD.Editor = function(){
     if(window.canvg) {
         svgCanvas.rasterExport();
       } else {
-        $.getScript('js/lib/rgbcolor.js', function() {
-          $.getScript('js/lib/canvg.js', function() {
+        $.getScript('static/js/lib/rgbcolor.js', function() {
+          $.getScript('static/js/lib/canvg.js', function() {
             svgCanvas.rasterExport();
           });
         });

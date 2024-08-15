@@ -126,7 +126,7 @@ jQuery.fn.jGraduateDefaults = {
     pickerTitle: "Drag markers to pick a paint"
   },
   images: {
-    clientPath: "images/"
+    clientPath: "static/images/"
   },
   newstop: 'inverse' // same, inverse, black, white
 };
