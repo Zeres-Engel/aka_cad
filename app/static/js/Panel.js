@@ -38,6 +38,68 @@ MD.Panel = function(){
   $('#font_size')    .dragInput({ min: 1,    max: 250,   step: 1,   callback: editor.text.changeFontSize, cursor: true, stepfunc: editor.stepFontSize, dragAdjust: .15 });
   $('#group_opacity').dragInput({ min: 0,    max: 100,   step:  5,  callback: editor.changeAttribute,     cursor: true,  start: 100             });
   $('#blur')         .dragInput({ min: 0,    max: 10,    step: .1,  callback: editor.changeBlur,          cursor: true,  start: 0               });
+  
+  // Configure Machine input with % format
+  $('#nmachine').dragInput({
+    min: 1,
+    max: 100,
+    step: 1,
+    callback: editor.changeAttribute,
+    cursor: true,
+    format: function(value) {
+        return value;
+    },
+    smallStep: 0.1, start: 1.5          
+  });
+
+  $('#startnest').on('click', function() {
+    var elems = editor.selected;
+    if (!elems || elems.length === 0) {
+        console.error('No elements selected.');
+        return;
+    }
+
+    const svgIds = elems.map(elem => elem.getAttribute('id'));
+
+    console.log('Sending IDs:', svgIds);
+
+    const svgContent = svgCanvas.getSvgString();
+
+    // Gửi dữ liệu đến Flask
+    $.ajax({
+        url: '/nest',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            svg_ids: svgIds,
+            svg_content: svgContent
+        }),
+        success: function(response) {
+            svgCanvas.setSvgString(response.new_svg_content);
+
+            elems.forEach(elem => {
+                updateNestPanel(elem);
+            });
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+  });
+
+  function updateNestPanel(elem) {
+      if (elem && elem.getAttribute('target') === 'bin') {
+          const area = elem.getAttribute('area') || 0;
+          const objects = elem.getAttribute('objects') || 0;
+          const nesters = elem.getAttribute('nesters') || 1;
+
+          // Cập nhật các trường hiển thị
+          $('#narea').val(area + '%');
+          $('#ncount').val(objects);
+          $('#startnest').val(nesters);
+      }
+  }
+
 
   // Align
 
@@ -100,7 +162,13 @@ MD.Panel = function(){
     if (elem === "multiselected") return $('#multiselected_panel').show();
 
     const tagName = elem.tagName;
+    const target = elem.getAttribute('target');
+
     $("#" + tagName + "_panel").show();
+    if (target === 'bin') {
+      updateNestPanel(elem);
+      $('#nest_panel').show();
+    }
     const strokeWidth = elem.getAttribute("stroke") && !elem.getAttribute("stroke-width") ? 1 : elem.getAttribute("stroke-width") || 0;
     $('#stroke_width').val(strokeWidth);
     const dash = elem.getAttribute("stroke-dasharray") || "none"
@@ -179,6 +247,7 @@ MD.Panel = function(){
     if (!elem && !multiselected) {      
       $("#stroke_panel").hide();
       $("#canvas_panel").show();
+      $('#nest_panel').hide();
     }
 
     if (elem !== null) {
@@ -271,7 +340,7 @@ MD.Panel = function(){
      };
      
      var el_name = elem.tagName;
-     
+     var target = elem.getAttribute("target");     
      if($(elem).data('gsvg')) {
        $('#g_panel').show();
      }
@@ -279,11 +348,15 @@ MD.Panel = function(){
      if (el_name === "path" || el_name === "polyline") {
        $('#path_panel').show();
      }
-     
+
      if(panels[el_name]) {
        var cur_panel = panels[el_name];
        $('#' + el_name + '_panel').show();
-       
+       if(target==="bin") {
+          updateNestPanel(elem);
+          $('#nest_panel').show();
+          $('#selected_panel').hide();;
+       }
        // corner radius has to live in a different panel
        // because otherwise it changes the position of the 
        // of the elements
@@ -343,9 +416,16 @@ MD.Panel = function(){
    if (multiselected) {
      $('#multiselected_panel').show();
      $('.action_multi_selected').removeClass('disabled');
+      const validForNesting = ['rect', 'circle', 'ellipse', 'line', 'text', 'polyline', 'path'];
+      const canNest = elems.some(el => validForNesting.includes(el.tagName) && el.getAttribute('target') === 'bin');
+      
+
      menu_items
        .enableContextMenuItems('#group')
        .disableContextMenuItems('#ungroup');
+      if (canNest) {
+        $('#nest_panel').show();
+      }
    } 
    
    if (!elem && !multiselected) {

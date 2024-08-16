@@ -2448,7 +2448,10 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
             "opacity": cur_shape.opacity / 2,
             "fill": "#f0ad4e",
             "target": "bin",
-            "machine": 1.0
+            "machine": 100,
+            "nesters": 1,
+            "objects": 0,
+            "area": 100
           }
         });
         break;

@@ -262,34 +262,31 @@
     </div>
   </div>
 
+  
   <div id="nest_panel" class="context_panel">
-    <h4>Nest</h4>
+    <h4>Nester Configuration</h4>
     <div class="draginputs">
         <label class="draginput">
-            <input id="nest_x" class="attr_changer" data-title="Change X coordinate" data-attr="x" pattern="[0-9]*" />
-            <span>X</span> 
+          <input id="nmachine" class="attr_changer" data-attr="machine" size="2" value="1" min="0" max="100" step="1" data-format="percent" />
+          <span>Machine</span>
         </label>
+    
         <label class="draginput">
-            <input id="nest_y" class="attr_changer" data-title="Change Y coordinate" data-attr="y" pattern="[0-9]*" />
-            <span>Y</span> 
+          <input id="startnest" data-attr="nesters" type="text" pattern="[0-9]*" />
+          <span>Nesters<span>
         </label>
+      
+    </div>
+    <h4>Nester Information</h4>
+    <div class="draginputs">
         <label class="draginput">
-            <input id="nest_width" class="attr_changer" data-attr="width" type="text" pattern="[0-9]*" />
-            <span>Width</span>
-        </label>
-        <label class="draginput">
-            <input id="nest_height" class="attr_changer" data-attr="height" type="text" pattern="[0-9]*" />
-            <span>Height</span>
-        </label>
-        <label class="draginput">
-            <input id="nest_machine" class="attr_changer" data-attr="machine" type="text" pattern="^0(\.\d+)?|1(\.0+)?$" />
-            <span>Machine</span>
-        </label>
-        <label class="draginput">
-            <input id="nest_area" type="text" readonly value="0%" />
+            <input id="narea" data-attr="area" type="text" readonly value="0%" />
             <span>Area Used</span>
         </label>
-        <button id="nesting_button" class="draginput twocol textcontent" type="button">Nesting</button>
+        <label class="draginput">
+            <input id="ncount" data-attr="objects" type="text" readonly value="0" />
+            <span>Objects</span>
+        </label>
     </div>
   </div>
 
