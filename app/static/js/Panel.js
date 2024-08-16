@@ -416,7 +416,7 @@ MD.Panel = function(){
    if (multiselected) {
      $('#multiselected_panel').show();
      $('.action_multi_selected').removeClass('disabled');
-      const validForNesting = ['rect', 'circle', 'ellipse', 'line', 'text', 'polyline', 'path'];
+      const validForNesting = ['rect', 'circle', 'ellipse', 'line', 'text', 'polyline', 'path', 'g'];
       const canNest = elems.some(el => validForNesting.includes(el.tagName) && el.getAttribute('target') === 'bin');
       
 
