@@ -1,79 +1,170 @@
-import cv2
 import numpy as np
-from svgpathtools import svg2paths
-from .transform import sort_points, align_edges
+import cv2
+import xml.etree.ElementTree as ET
+from svgpathtools import parse_path
+from cairosvg import svg2png
+from PIL import Image
+import io
+import re
 
-def get_polygon(path, epsilon_ratio=0.02, sort_clockwise=True):
-    if path.endswith(".svg"):
-        paths, attributes = svg2paths(path)
-        max_path = max(paths, key=lambda path: path.length())
-        points = np.array([[segment.start.real, segment.start.imag] for segment in max_path] +
-                          [[segment.end.real, segment.end.imag] for segment in max_path])
-        unique_points = np.unique(points, axis=0)
-    else:
-        image = cv2.imread(path)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        _, threshold = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)
-        contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if not contours:
-            return None
-        max_contour = max(contours, key=cv2.contourArea)
-        epsilon = epsilon_ratio * cv2.arcLength(max_contour, True)
-        unique_points = cv2.approxPolyDP(max_contour, epsilon, True)
-        if unique_points is None or unique_points.ndim != 3 or unique_points.shape[1] != 1:
-            return None  # Return None if no valid polygon is found
-        unique_points = unique_points[:, 0, :]  # Reshape from 3D to 2D array
+from utils import sort_points
 
-    # Ensure unique_points is in the correct data type for convexHull
-    unique_points = np.array(unique_points, dtype=np.float32)  # Convert to float32
+def apply_transform(points, transform_str):
+    """Apply transform operations (translate, rotate, scale) to the points."""
+    if not transform_str:
+        return points
 
-    # Compute the convex hull of the points
-    convex_hull = cv2.convexHull(unique_points)
+    transform_ops = re.findall(r'(\w+)\(([^)]+)\)', transform_str)
+    for op, params in transform_ops:
+        params = list(map(float, re.split(r'[ ,]', params.strip())))
+        if op == 'translate':
+            dx, dy = params[0], params[1] if len(params) > 1 else 0
+            points[:, 0] += dx
+            points[:, 1] += dy
+        elif op == 'rotate':
+            angle = np.radians(params[0])
+            cx, cy = params[1:3] if len(params) == 3 else np.mean(points, axis=0)
+            points = rotate_points(points, angle, origin=(cx, cy))
+        elif op == 'scale':
+            sx = params[0]
+            sy = params[1] if len(params) > 1 else sx
+            center = np.mean(points, axis=0)
+            points = center + (points - center) * [sx, sy]
+    return points
 
-    # Ensure the convex_hull is properly shaped for sorting (remove any extra dimensions)
-    if convex_hull.ndim > 2:
-        convex_hull = convex_hull.reshape(-1, 2)
+def rotate_points(points, angle, origin=(0, 0)):
+    """Rotate an array of points around a given origin."""
+    ox, oy = origin
+    cos_angle, sin_angle = np.cos(angle), np.sin(angle)
 
-    # Sort the points of the convex hull, if necessary
-    sorted_points = sort_points(convex_hull, clockwise=sort_clockwise)
+    return np.array([
+        [
+            ox + cos_angle * (px - ox) - sin_angle * (py - oy),
+            oy + sin_angle * (px - ox) + cos_angle * (py - oy)
+        ]
+        for px, py in points
+    ])
 
-    # Align the edges based on the sorted points
-    aligned_polygon = align_edges(sorted_points)
+def process_shape(elem, process_func, padding=0):
+    """Generic shape processing function."""
+    points = process_func(elem)
     
-    return aligned_polygon
-
-def get_polygon_from_path(path_element, epsilon_ratio=0.02, sort_clockwise=True):
-    points = np.array([[segment.start.real, segment.start.imag] for segment in path_element] +
-                      [[segment.end.real, segment.end.imag] for segment in path_element])
-    unique_points = np.unique(points, axis=0)
-
-    # Ensure unique_points is in the correct data type for convexHull
-    unique_points = np.array(unique_points, dtype=np.float32)  # Convert to float32
-
-    # Compute the convex hull of the points
-    convex_hull = cv2.convexHull(unique_points)
-
-    # Ensure the convex_hull is properly shaped for sorting (remove any extra dimensions)
-    if convex_hull.ndim > 2:
-        convex_hull = convex_hull.reshape(-1, 2)
-
-    # Sort the points of the convex hull, if necessary
-    sorted_points = sort_points(convex_hull, clockwise=sort_clockwise)
-
-    # Align the edges based on the sorted points
-    aligned_polygon = align_edges(sorted_points)
+    # Apply transform if it exists
+    transform_str = elem.attrib.get('transform')
+    if transform_str:
+        points = apply_transform(points, transform_str)
     
-    return aligned_polygon
+    return add_padding(compute_convex_hull(points), padding)
 
-def get_mul_polygon(path, epsilon_ratio=0.02, sort_clockwise=True):
-    if not path.endswith(".svg"):
-        raise ValueError("Path must be an SVG file")
+def process_ellipse(elem, padding=0):
+    """Process an ellipse element."""
+    cx, cy = float(elem.attrib['cx']), float(elem.attrib['cy'])
+    rx, ry = float(elem.attrib['rx']), float(elem.attrib['ry'])
+    theta = np.linspace(0, 2 * np.pi, 100)
+    x = cx + rx * np.cos(theta)
+    y = cy + ry * np.sin(theta)
+    points = np.vstack((x, y)).T
+    return process_shape(elem, lambda e: points, padding)
 
-    paths, attributes = svg2paths(path)
-    polygons = []
-    
-    for path_element in paths:
-        aligned_polygon = get_polygon_from_path(path_element, epsilon_ratio, sort_clockwise)
-        polygons.append(aligned_polygon)
-        
-    return polygons
+def process_circle(elem, padding=0):
+    """Process a circle element."""
+    cx, cy = float(elem.attrib['cx']), float(elem.attrib['cy'])
+    r = float(elem.attrib['r'])
+    theta = np.linspace(0, 2 * np.pi, 100)
+    x = cx + r * np.cos(theta)
+    y = cy + r * np.sin(theta)
+    points = np.vstack((x, y)).T
+    return process_shape(elem, lambda e: points, padding)
+
+def process_rect(elem, padding=0):
+    """Process a rectangle element."""
+    x, y = float(elem.attrib['x']), float(elem.attrib['y'])
+    width, height = float(elem.attrib['width']), float(elem.attrib['height'])
+    points = np.array([[x, y], [x + width, y], [x + width, y + height], [x, y + height]])
+    return process_shape(elem, lambda e: points, padding)
+
+def process_path(elem, padding=0):
+    """Process a path element."""
+    path_data = elem.attrib.get('d', '')
+    if not path_data:
+        return None
+    path = parse_path(path_data)
+    points = np.array([[seg.start.real, seg.start.imag] for seg in path] +
+                      [[seg.end.real, seg.end.imag] for seg in path])
+    return process_shape(elem, lambda e: points, padding)
+
+def process_line(elem, padding=0):
+    """Process a line element."""
+    x1, y1 = float(elem.attrib['x1']), float(elem.attrib['y1'])
+    x2, y2 = float(elem.attrib['x2']), float(elem.attrib['y2'])
+    points = np.array([[x1, y1], [x2, y2]])
+    return process_shape(elem, lambda e: points, padding)
+
+def process_polyline(elem, padding=0):
+    """Process a polyline element."""
+    points = np.array([[float(x), float(y)] for x, y in 
+                       [pair.split(',') for pair in elem.attrib['points'].strip().split(' ')]])
+    return process_shape(elem, lambda e: points, padding)
+
+def process_polygon(elem, padding=0):
+    """Process a polygon element."""
+    return process_polyline(elem, padding)
+
+def process_group(elem, padding=0):
+    """Process a group of elements and treat them as a single shape with padding."""
+    all_points = [
+        process_func(child, padding)
+        for child, process_func in {
+            'ellipse': process_ellipse,
+            'circle': process_circle,
+            'rect': process_rect,
+            'path': process_path,
+            'line': process_line,
+            'polyline': process_polyline,
+            'polygon': process_polygon,
+        }.items()
+        if child.tag.endswith(process_func.__name__.replace('process_', ''))
+    ]
+    if all_points:
+        combined_points = np.vstack(all_points)
+        return add_padding(compute_convex_hull(combined_points), padding)
+    return None
+
+def process_complex_shape(elem, padding=0):
+    """Convert complex or unsupported elements to an image, find contours, and compute convex hull with padding."""
+    svg_str = ET.tostring(elem, encoding='unicode')
+    output_width, output_height = 10000, 10000
+    png_data = svg2png(bytestring=svg_str, output_width=output_width, output_height=output_height)
+    image = Image.open(io.BytesIO(png_data)).convert("L")
+    open_cv_image = np.array(image)
+    contours, _ = cv2.findContours(open_cv_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return None
+    max_contour = max(contours, key=cv2.contourArea)
+    epsilon = 0.02 * cv2.arcLength(max_contour, True)
+    approx = cv2.approxPolyDP(max_contour, epsilon, True)
+    points = approx[:, 0, :]
+    return add_padding(compute_convex_hull(points), padding)
+
+def process_image(elem, padding=0):
+    """Convert an SVG image element to a polygon or other format for processing."""
+    x = float(elem.attrib.get('x', 0))
+    y = float(elem.attrib.get('y', 0))
+    width = float(elem.attrib.get('width', 0))
+    height = float(elem.attrib.get('height', 0))
+    points = np.array([[x, y], [x + width, y], [x + width, y + height], [x, y + height]])
+    return add_padding(points, padding) if padding > 0 else points
+
+def compute_convex_hull(points):
+    """Compute and sort the convex hull of the polygon."""
+    points = np.array(points, dtype=np.float32)
+    if len(points) < 3:
+        return points
+    convex_hull = cv2.convexHull(points).reshape(-1, 2)
+    sorted_points = sort_points(convex_hull)
+    return np.vstack([sorted_points, sorted_points[0]]) if not np.array_equal(sorted_points[0], sorted_points[-1]) else sorted_points
+
+def add_padding(points, padding):
+    """Add padding to the polygon, expanding it from its center."""
+    center = np.mean(points, axis=0)
+    return compute_convex_hull(points + (points - center) * padding) if padding != 0 else points

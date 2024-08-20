@@ -1,7 +1,6 @@
 from .object import Object
 from .material import Material
 from aka_cad import nest
-from utils import export_nest_map, export_raw_svg
 import bisect
 
 class Nester:
@@ -11,13 +10,11 @@ class Nester:
         self.nest_result = {}
 
     def add_material(self, material, num_copies=1):
-        """Add a pre-configured Material object to the list, optionally multiple copies."""
         if not isinstance(material, Material):
             raise ValueError("Invalid material: Expected a Material object.")
-        self.materials.extend([material] * num_copies)  # Thêm bản sao của material vào danh sách
+        self.materials.extend([material] * num_copies)
 
     def add_object(self, obj, num_copies=1):
-        """Add an Object instance to the list, sorted by item_id."""
         if not isinstance(obj, Object):
             raise ValueError("Invalid object: Expected an Object instance.")
         for _ in range(num_copies):
@@ -30,11 +27,12 @@ class Nester:
         nested_result = nest(items, [material.box for material in self.materials])
 
         self.nest_result = {}
-        for index in range(len(self.materials)):
+        for index, material in enumerate(self.materials):
             vertices_list = []
             img_paths = []
             translations = []
             rotations = []
+            svg_ids = []
 
             for obj, item in zip(self.objects, nested_result):
                 if int(item.bin_id) == index:
@@ -42,32 +40,16 @@ class Nester:
                     img_paths.append(obj.img_path)
                     translations.append(item.translation)
                     rotations.append(item.rotation)
+                    svg_ids.append(obj.svg_id)
 
             self.nest_result[index] = {
+                'material_id': material.bin_id,
                 'vertices_list': vertices_list,
                 'img_paths': img_paths,
                 'translations': translations,
-                'rotations': rotations
+                'rotations': rotations,
+                'svg_ids': svg_ids
             }
-
-    def export_map(self):
-        dashed_color = (0, 0, 0)  # Black
-        rectangle_color = (17, 105, 176)  # Converted from #1169b0
-        poly_color = (255, 112, 29)  # Converted from #ff701d
-        for index in self.nest_result:
-            data = self.nest_result[index]
-            filename = f'map_{index}.png'
-            export_nest_map(data['vertices_list'], data['img_paths'], data['translations'], data['rotations'], 
-                            self.materials[index], filename, dashed_color=dashed_color, 
-                            rectangle_color=rectangle_color, poly_color=poly_color)
-
-    def export_svg(self):
-        poly_color = (255, 112, 29)  # Converted from #ff701d
-        for index in self.nest_result:
-            data = self.nest_result[index]
-            filename = f'output/raw_{index}.svg'
-            export_raw_svg(data['vertices_list'], data['img_paths'], data['translations'], data['rotations'], 
-                           self.materials[index], filename, poly_color=poly_color)
 
     @property
     def material_dimensions(self):

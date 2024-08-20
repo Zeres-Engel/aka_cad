@@ -2,9 +2,8 @@ import cv2
 from aka_cad import Box
 
 class Material:
-    def __init__(self, width=None, height=None, img_path=None):
+    def __init__(self, width=None, height=None, img_path=None, bin_id=""):
         if img_path and (width is None or height is None):
-            # Extract dimensions from an image if not explicitly provided
             dimensions = self.extract_dimensions_from_image(img_path)
             if dimensions:
                 width, height = dimensions
@@ -15,6 +14,7 @@ class Material:
             raise ValueError("Width and height must be provided")
 
         self.box = Box(width, height)
+        self.bin_id = bin_id
 
     def __repr__(self):
         return f"Material(width: {self.width}, height: {self.height})"
