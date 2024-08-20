@@ -43,10 +43,7 @@ def nest():
             else:
                 print(f"Failed to process {elem_id}: polygon is None or invalid.")
     
-    # Perform nesting
     nester.nest()
-
-    # Apply transformations based on nesting results
     for index, nest_data in nester.nest_result.items():
         if isinstance(nest_data, dict):
             bin_id = nest_data['material_id']
