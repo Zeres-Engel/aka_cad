@@ -72,6 +72,18 @@ class SVGManager:
         else:
             print(f"Element with ID {elem_id} not found.")
 
+    def process_elements(self):
+        root = self.tree.getroot()
+        
+        for elem in root.iter():
+            if elem.tag.lower() == 'rect' and elem.attrib.get('target') == 'bin':
+                # Keep rect elements with target="bin" unchanged
+                continue
+            else:
+                # Remove the transform attribute from other elements if it exists
+                if 'transform' in elem.attrib:
+                    del elem.attrib['transform']
+
     def get_svg_content(self):
         """Return the updated SVG content as a plain XML string with the necessary namespace."""
         root = self.tree.getroot()

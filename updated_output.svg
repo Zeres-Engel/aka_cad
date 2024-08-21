@@ -1,22 +1,20 @@
 <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+
  <g>
   <title>Layer 1</title>
-  <rect fill="#fff" stroke="#000" x="452.59999" y="62.4" width="206" height="232" id="svg_1" machine="1" padding="0" target="bin" area="0.40" objects="10" />
-  <rect fill="#fff" stroke="#000" x="189.59999" y="81.4" width="107" height="214" id="svg_2" machine="1" padding="0" target="bin" area="0.60" objects="4" />
-  <rect padding="0" fill="#fff" stroke="#000" x="220.39999" y="159.3" width="62.0" height="89.0" id="svg_3" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="216.69998999999999" y="100.0" width="68.99999999999997" height="56.0" id="svg_4" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="189.19998999999999" y="178.5" width="34.0" height="41.0" id="svg_5" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="216.69998999999999" y="235.10000000000002" width="68.99999999999997" height="43.0" id="svg_6" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="508.19998999999996" y="203.70000000000002" width="44.0" height="43.0" id="svg_7" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="595.29999" y="159.8" width="43.0" height="44.0" id="svg_8" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="465.29999" y="159.8" width="43.0" height="44.0" id="svg_9" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="552.29999" y="109.0" width="43.0" height="44.0" id="svg_10" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="464.19999" y="203.70000000000002" width="44.0" height="43.0" id="svg_11" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="560.89999" y="161.8" width="43.0" height="44.0" id="svg_12" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="464.19999" y="116.69999999999999" width="44.0" height="43.0" id="svg_13" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="552.19999" y="197.1" width="44.0" height="43.0" id="svg_14" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="508.19998999999996" y="160.7" width="44.0" height="43.0" id="svg_15" transform="" />
-  <rect padding="0" fill="#fff" stroke="#000" x="508.19998999999996" y="117.69999999999999" width="44.0" height="43.0" id="svg_16" transform="" />
+  <rect objects="13" area="0.35" target="bin" padding="0" machine="1" stroke="#000" id="svg_1" height="329" width="196" y="88.4" x="536.59998" fill="#fff" />
+  <rect id="svg_2" height="37" width="126" y="235.1" x="561.9999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_3" height="30" width="113" y="204.4" x="570.29998" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_4" height="33" width="112" y="271.70000000000005" x="570.3999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_5" height="16" width="68" y="208.6" x="698.9999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_6" height="14" width="106" y="302.8" x="573.9999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_7" height="13" width="78" y="316.70000000000005" x="590.79998" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_8" height="22" width="52" y="218.20000000000002" x="550.3999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_9" height="34" width="96" y="170.8" x="579.9999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_10" height="18" width="43" y="279.70000000000005" x="564.9999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_11" height="14" width="44" y="279.0" x="692.19998" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_12" height="10" width="37" y="329.4" x="615.8999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_13" height="12" width="37" y="174.7" x="693.3999799999999" stroke="#000" fill="#fff" transform="" />
+  <rect id="svg_14" height="15" width="53" y="165.10000000000002" x="565.09998" stroke="#000" fill="#fff" transform="" />
  </g>
-
 </svg>
