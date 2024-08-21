@@ -89,10 +89,9 @@ PYBIND11_MODULE(aka_cad, m)
             "Returns the translation vector as a tuple (x, y).")
         .def_property_readonly("rotation",
             [](const Item &i) {
-                return static_cast<double>(i.rotation());  // Giả sử Radians có thể chuyển đổi sang double
+                return static_cast<double>(i.rotation());
             },
             "Returns the rotation angle in radians.")
-
 
         .def("transformed_vertices",
              [](const Item &item) {

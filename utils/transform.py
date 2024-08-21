@@ -12,7 +12,7 @@ def sort_points(points, clockwise=True):
     sorted_indices = np.argsort(-angles if clockwise else angles)
     
     return points[sorted_indices]
-
+# Utility functions
 def rotate_point(point, angle, origin=(0, 0)):
     """Rotate a point around a given origin."""
     ox, oy = origin
@@ -28,12 +28,10 @@ def calculate_centroid(points):
     """Calculate the centroid of a set of points."""
     return np.mean(points, axis=0)
 
-# Transform functions
 def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
-    """Apply transformation to an SVG element based on polygon, dx, dy, and angle."""
-    rotated_polygon = np.array([rotate_point(point, np.radians(angle)) for point in polygon])
-    new_centroid = calculate_centroid(rotated_polygon)
-    delta_x, delta_y = new_centroid - calculate_centroid(polygon)
+    """Apply transformation to an SVG element based on polygon and translation."""
+    polygon_centroid = calculate_centroid(polygon)
+    polygon_centroid = polygon_centroid + np.array([dx, dy])
 
     tag = elem.tag.split('}')[-1]
 
@@ -50,16 +48,16 @@ def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
     }
 
     if tag in transform_functions:
-        transform_functions[tag](elem, dx + delta_x, dy + delta_y, angle, new_centroid)
+        transform_functions[tag](elem, polygon_centroid, angle)
 
     return elem
 
-def apply_transform_to_rect(elem, dx, dy, angle, centroid):
+def apply_transform_to_rect(elem, centroid, angle):
     """Apply transformation to a rectangle element."""
-    x, y = float(elem.get('x', 0)) + dx, float(elem.get('y', 0)) + dy
     width, height = float(elem.get('width', 0)), float(elem.get('height', 0))
+    x, y = centroid[0] - width / 2, centroid[1] - height / 2
     points = np.array([[x, y], [x + width, y], [x + width, y + height], [x, y + height]])
-    rotated_points = np.array([rotate_point(point, np.radians(angle), origin=centroid) for point in points])
+    rotated_points = np.array([rotate_point(point, angle, origin=centroid) for point in points])
 
     min_x, min_y = np.min(rotated_points, axis=0)
     max_x, max_y = np.max(rotated_points, axis=0)
@@ -68,72 +66,64 @@ def apply_transform_to_rect(elem, dx, dy, angle, centroid):
     elem.set('width', str(max_x - min_x))
     elem.set('height', str(max_y - min_y))
 
-def apply_transform_to_circle_or_ellipse(elem, dx, dy, angle, centroid):
+def apply_transform_to_circle_or_ellipse(elem, centroid, angle):
     """Apply transformation to a circle or ellipse element."""
-    cx, cy = float(elem.get('cx', 0)) + dx, float(elem.get('cy', 0)) + dy
-    rotated_cx, rotated_cy = rotate_point((cx, cy), np.radians(angle), origin=centroid)
-    elem.set('cx', str(rotated_cx))
-    elem.set('cy', str(rotated_cy))
+    cx, cy = rotate_point((centroid[0], centroid[1]), angle, origin=centroid)
+    elem.set('cx', str(cx))
+    elem.set('cy', str(cy))
 
-def apply_transform_to_line(elem, dx, dy, angle, centroid):
+def apply_transform_to_line(elem, centroid, angle):
     """Apply transformation to a line element."""
-    x1, y1 = float(elem.get('x1', 0)) + dx, float(elem.get('y1', 0)) + dy
-    x2, y2 = float(elem.get('x2', 0)) + dx, float(elem.get('y2', 0)) + dy
-    rotated_x1, rotated_y1 = rotate_point((x1, y1), np.radians(angle), origin=centroid)
-    rotated_x2, rotated_y2 = rotate_point((x2, y2), np.radians(angle), origin=centroid)
-    elem.set('x1', str(rotated_x1))
-    elem.set('y1', str(rotated_y1))
-    elem.set('x2', str(rotated_x2))
-    elem.set('y2', str(rotated_y2))
+    x1, y1 = float(elem.get('x1', 0)), float(elem.get('y1', 0))
+    x2, y2 = float(elem.get('x2', 0)), float(elem.get('y2', 0))
+    midpoint = np.array([(x1 + x2) / 2, (y1 + y2) / 2])
+    delta = centroid - midpoint
 
-def apply_transform_to_polyline_or_polygon(elem, dx, dy, angle, centroid):
+    x1, y1 = rotate_point((x1 + delta[0], y1 + delta[1]), angle, origin=centroid)
+    x2, y2 = rotate_point((x2 + delta[0], y2 + delta[1]), angle, origin=centroid)
+
+    elem.set('x1', str(x1))
+    elem.set('y1', str(y1))
+    elem.set('x2', str(x2))
+    elem.set('y2', str(y2))
+
+def apply_transform_to_polyline_or_polygon(elem, centroid, angle):
     """Apply transformation to a polyline or polygon element."""
     points = np.array([[float(coord) for coord in point.split(',')] for point in elem.get('points', '').strip().split()])
-    translated_points = points + np.array([dx, dy])
-    rotated_points = np.array([rotate_point(point, np.radians(angle), origin=centroid) for point in translated_points])
+    current_centroid = calculate_centroid(points)
+    delta = centroid - current_centroid
+    moved_points = points + delta
+    rotated_points = np.array([rotate_point(point, angle, origin=centroid) for point in moved_points])
     points_str = ' '.join([f"{x},{y}" for x, y in rotated_points])
     elem.set('points', points_str)
 
-def apply_transform_to_path(elem, dx, dy, angle, centroid):
+def apply_transform_to_path(elem, centroid, angle):
     """Apply transformation to a path element."""
     path = parse_path(elem.get('d', ''))
     points = np.array([[seg.start.real, seg.start.imag] for seg in path] +
                       [[seg.end.real, seg.end.imag] for seg in path])
-    translated_points = points + np.array([dx, dy])
-    rotated_points = np.array([rotate_point(point, np.radians(angle), origin=centroid) for point in translated_points])
+    current_centroid = calculate_centroid(points)
+    delta = centroid - current_centroid
 
     path_d = ""
-    for i, point in enumerate(rotated_points):
-        cmd = "M" if i == 0 else "L"
-        path_d += f"{cmd}{point[0]},{point[1]} "
-    path_d = path_d.strip() + "Z" if 'polygon' in elem.tag else path_d.strip()
-    elem.set('d', path_d)
+    for seg in path:
+        start = rotate_point(np.array([seg.start.real, seg.start.imag]) + delta, angle, origin=centroid)
+        end = rotate_point(np.array([seg.end.real, seg.end.imag]) + delta, angle, origin=centroid)
+        cmd = f"M{start[0]},{start[1]} L{end[0]},{end[1]} "
+        path_d += cmd
+    elem.set('d', path_d.strip())
 
-def apply_transform_to_group(elem, dx, dy, angle):
+def apply_transform_to_group(elem, centroid, angle):
     """Apply transformation to a group element."""
-    all_points = []
     for child in elem:
-        if child.tag.split('}')[-1] in {'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'}:
-            child_points = np.array([[float(child.get('x', 0)), float(child.get('y', 0))]
-                                     if 'x' in child.attrib and 'y' in child.attrib else [0, 0]])
-            all_points.extend(child_points)
+        transform_svg_element(child, [centroid], angle=angle)
 
-    group_centroid = calculate_centroid(np.array(all_points)) if all_points else (0, 0)
-    for child in elem:
-        transform_svg_element(child, all_points, dx, dy, angle)
-
-    for child in elem:
-        points = np.array([[float(coord) for coord in point.split(',')] for point in child.get('points', '').strip().split()])
-        rotated_points = np.array([rotate_point(point, np.radians(angle), origin=group_centroid) for point in points])
-        points_str = ' '.join([f"{x},{y}" for x, y in rotated_points])
-        child.set('points', points_str)
-
-def apply_transform_to_image(elem, dx, dy, angle, centroid):
+def apply_transform_to_image(elem, centroid, angle):
     """Apply transformation to an image element."""
-    x, y = float(elem.get('x', 0)) + dx, float(elem.get('y', 0)) + dy
     width, height = float(elem.get('width', 0)), float(elem.get('height', 0))
+    x, y = centroid[0] - width / 2, centroid[1] - height / 2
     points = np.array([[x, y], [x + width, y], [x + width, y + height], [x, y + height]])
-    rotated_points = np.array([rotate_point(point, np.radians(angle), origin=centroid) for point in points])
+    rotated_points = np.array([rotate_point(point, angle, origin=centroid) for point in points])
 
     min_x, min_y = np.min(rotated_points, axis=0)
     max_x, max_y = np.max(rotated_points, axis=0)

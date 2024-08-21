@@ -346,7 +346,7 @@ svgedit.utilities.snapToGrid = function(value){
   return value;
 };
 var snapToGrid = svgedit.utilities.snapToGrid;
-var visElems = 'a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use,nest';
+var visElems = 'a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use';
 var ref_attrs = ["clip-path", "fill", "filter", "marker-end", "marker-mid", "marker-start", "mask", "stroke"];
 
 var elData = $.data;
@@ -575,16 +575,7 @@ getStrokedBBox = this.getStrokedBBox = function(elems) {
         var elemNames = ['ellipse','path','line','polyline','polygon'];
         if(elemNames.indexOf(elem.tagName) >= 0) {
           bb = canvas.convertToPath(elem, true);
-        } 
-        else if(elem.tagName == 'rect') {
-          // Look for radius
-          var rx = elem.getAttribute('rx');
-          var ry = elem.getAttribute('ry');
-          if(rx || ry) {
-            bb = good_bb = canvas.convertToPath(elem, true);
-          }
-        }
-        else if(elem.tagName == 'nest') {
+        } else if(elem.tagName == 'rect') {
           // Look for radius
           var rx = elem.getAttribute('rx');
           var ry = elem.getAttribute('ry');
@@ -1009,7 +1000,6 @@ var remapElement = this.remapElement = function(selected,changes,m) {
   {
     case "foreignObject":
     case "rect":
-    case "nest":
     case "image":
       
       // Allow images to be inverted (give them matrix when flipped)
@@ -1367,7 +1357,6 @@ var recalculateDimensions = this.recalculateDimensions = function(selected) {
       break;
     case "foreignObject":
     case "rect":
-    case "nest":
     case "image":
       attrs = ["width", "height", "x", "y"];
       break;
@@ -2432,29 +2421,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           }
         });
         break;
-      case "nest":
-        started = true;
-        start_x = x;
-        start_y = y;
-        addSvgElementFromJson({
-          "element": "rect",
-          "curStyles": true,
-          "attr": {
-            "x": x,
-            "y": y,
-            "width": 0,
-            "height": 0,
-            "id": getNextId(),
-            "opacity": cur_shape.opacity / 2,
-            "fill": "#f0ad4e",
-            "target": "bin",
-            "machine": 100,
-            "nesters": 1,
-            "objects": 0,
-            "area": 100
-          }
-        });
-        break;
       case "line":
         started = true;
         var stroke_w = cur_shape.stroke_width == 0?1:cur_shape.stroke_width;
@@ -2838,7 +2804,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
       case "square":
         // fall through
       case "rect":
-      case "nest":
       case "image":
         var square = (current_mode == 'square') || evt.shiftKey,
           w = Math.abs(x - start_x),
@@ -3201,7 +3166,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
       case "foreignObject":
       case "square":
       case "rect":
-      case "nest":
       case "image":
         var attrs = $(element).attr(["width", "height"]);
         // Image should be kept regardless of size (use inherit dimensions later)
@@ -3237,24 +3201,6 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
           (freehand.maxy - freehand.miny) > 0) {
           element = addSvgElementFromJson({
             "element": "rect",
-            "curStyles": true,
-            "attr": {
-              "x": freehand.minx,
-              "y": freehand.miny,
-              "width": (freehand.maxx - freehand.minx),
-              "height": (freehand.maxy - freehand.miny),
-              "id": getId()
-            }
-          });
-          call("changed",[element]);
-          keep = true;
-        }
-        break;
-      case "fhrest":
-        if ((freehand.maxx - freehand.minx) > 0 &&
-          (freehand.maxy - freehand.miny) > 0) {
-          element = addSvgElementFromJson({
-            "element": "rest",
             "curStyles": true,
             "attr": {
               "x": freehand.minx,
@@ -3414,7 +3360,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
     }
 
     // Reset context
-    if(tagName === "ellipse" || tagName === "circle" || tagName === "line" || tagName === "rect" || tagName === "nest") {
+    if(tagName === "ellipse" || tagName === "circle" || tagName === "line" || tagName === "rect") {
       editor.convertToPath();
     }
     
@@ -7668,21 +7614,6 @@ this.setRectRadius = function(val) {
   }
 };
 
-this.setNestRadius = function(val) {
-  if (canvas.elementsAreSame(selectedElements) && selectedElements[0].tagName == "nest") {
-    var assign_rr = function(selected){
-    var r = selected.getAttribute("rx");
-      if (r != val) {
-        selected.setAttribute("rx", val);
-        selected.setAttribute("ry", val);
-        addCommandToHistory(new ChangeElementCommand(selected, {"rx":r, "ry":r}, "Radius"));
-        call("changed", [selected]);
-      }
-    }
-    selectedElements.forEach(assign_rr)
-  }
-};
-
 // Function: makeHyperlink
 // Wraps the selected element(s) in an anchor element or converts group to one
 this.makeHyperlink = function(url) {
@@ -7826,38 +7757,6 @@ this.convertToPath = function(elem, getBBox) {
   case 'polyline':
   case 'polygon':
     d = "M" + elem.getAttribute('points');
-    break;
-  case 'nest':
-    var r = $(elem).attr(['rx', 'ry']);
-    var rx = r.rx, ry = r.ry;
-    var b = elem.getBBox();
-    var x = b.x, y = b.y, w = b.width, h = b.height;
-    var num = 4-num; // Why? Because!
-    if(!rx && !ry) {
-      // Regular rect
-      joinSegs([
-        ['M',[x, y]],
-        ['L',[x+w, y]],
-        ['L',[x+w, y+h]],
-        ['L',[x, y+h]],
-        ['L',[x, y]],
-        ['Z',[]]
-      ]);
-    } else {
-      if (!ry) ry = rx
-      joinSegs([
-        ['M',[x, y+ry]],
-        ['C',[x,y+ry/num, x+rx/num,y, x+rx,y]],
-        ['L',[x+w-rx, y]],
-        ['C',[x+w-rx/num,y, x+w,y+ry/num, x+w,y+ry]],
-        ['L',[x+w, y+h-ry]],
-        ['C',[x+w, y+h-ry/num, x+w-rx/num,y+h, x+w-rx,y+h]],
-        ['L',[x+rx, y+h]],
-        ['C',[x+rx/num, y+h, x,y+h-ry/num, x,y+h-ry]],
-        ['L',[x, y+ry]],
-        ['Z',[]]
-      ]);
-    }
     break;
   case 'rect':
     var r = $(elem).attr(['rx', 'ry']);

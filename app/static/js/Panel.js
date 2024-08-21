@@ -38,18 +38,66 @@ MD.Panel = function(){
   $('#font_size')    .dragInput({ min: 1,    max: 250,   step: 1,   callback: editor.text.changeFontSize, cursor: true, stepfunc: editor.stepFontSize, dragAdjust: .15 });
   $('#group_opacity').dragInput({ min: 0,    max: 100,   step:  5,  callback: editor.changeAttribute,     cursor: true,  start: 100             });
   $('#blur')         .dragInput({ min: 0,    max: 10,    step: .1,  callback: editor.changeBlur,          cursor: true,  start: 0               });
-  
-  // Configure Machine input with % format
-  $('#nmachine').dragInput({
-    min: 1,
-    max: 100,
-    step: 1,
-    callback: editor.changeAttribute,
-    cursor: true,
-    format: function(value) {
-        return value;
-    },
-    smallStep: 0.1, start: 1.5          
+
+  $('#mk_material').on('click', function() {
+    var selectedElements = editor.selected;
+
+    if (selectedElements.length > 0) {
+      selectedElements.forEach(element => {
+          if (element.tagName === 'rect') {
+              editor.changeAttribute('machine', '1', true);
+              editor.changeAttribute('padding', '0', true);
+              editor.changeAttribute('target', 'bin', true);
+              editor.changeAttribute('area', '0', true);
+              editor.changeAttribute('objects', '0', true);
+          }
+      });
+      $('#mk_material').hide()
+      $('#umk_material').show();
+      $('#nest_panel').show();
+      $('#align_tools').hide();
+      $('#stroke_panel').hide();
+    }
+});
+
+  $('#umk_material').on('click', function() {
+      var selectedElements = editor.selected;
+
+      if (selectedElements.length > 0) {
+          selectedElements.forEach(element => {
+              if (element.tagName === 'rect') {
+                  editor.changeAttribute('machine', '', true);
+                  editor.changeAttribute('padding', '', true);
+                  editor.changeAttribute('target', '', true);
+                  editor.changeAttribute('area', '', true);
+                  editor.changeAttribute('objects', '', true);
+              }
+          });
+          $('#mk_material').show()
+          $('#umk_material').hide();
+          $('#nest_panel').hide();
+      }
+  });
+
+    // Machine input field
+    $('#nmachine').dragInput({
+      min: 1,
+      max: 100,
+      step: 1,
+      callback: editor.changeAttribute, // Ensure it updates the attribute properly
+      cursor: true,
+      smallStep: 0.1, 
+      start: 1
+  });
+
+  // Padding input field
+  $('#add_padding').dragInput({
+      min: 0,
+      max: null,
+      step: 0.01,
+      callback: editor.changeAttribute,
+      cursor: true,
+      start: 0    
   });
 
   $('#startnest').on('click', function() {
@@ -60,25 +108,42 @@ MD.Panel = function(){
     }
 
     const svgIds = elems.map(elem => elem.getAttribute('id'));
+    
+    // Tìm phần tử đầu tiên có target == 'bin'
+    var binElement = elems.find(elem => elem.tagName === 'rect' && elem.getAttribute('target') === 'bin');
+    if (!binElement) {
+        console.error('No bin element found.');
+        return;
+    }
+
+    const machine = binElement.getAttribute('machine'); // Giả sử tất cả đều có cùng machine và padding
+    const padding = binElement.getAttribute('padding');
 
     console.log('Sending IDs:', svgIds);
+    console.log('Machine:', machine);
+    console.log('Padding:', padding);
 
     const svgContent = svgCanvas.getSvgString();
 
-    // Gửi dữ liệu đến Flask
     $.ajax({
         url: '/nest',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
             svg_ids: svgIds,
-            svg_content: svgContent
+            svg_content: svgContent,
+            machine: machine,
+            padding: padding
         }),
         success: function(response) {
             svgCanvas.setSvgString(response.new_svg_content);
 
-            elems.forEach(elem => {
-                updateNestPanel(elem);
+            // Không cần lấy giá trị 'area_useds' và 'objects' nữa, vì nó đã được cập nhật trong SVG content
+
+            elems.forEach((elem) => {
+                if (elem.tagName === 'rect' && elem.getAttribute('target') === 'bin') {
+                    updateNestPanel(elem);
+                }
             });
         },
         error: function(error) {
@@ -87,22 +152,19 @@ MD.Panel = function(){
     });
   });
 
+
+  // Function to update the nesting panel
   function updateNestPanel(elem) {
       if (elem && elem.getAttribute('target') === 'bin') {
-          const area = elem.getAttribute('area') || 0;
-          const objects = elem.getAttribute('objects') || 0;
-          const nesters = elem.getAttribute('nesters') || 1;
-
-          // Cập nhật các trường hiển thị
-          $('#narea').val(area + '%');
+          const area = elem.getAttribute('area');
+          const objects = elem.getAttribute('objects');
+          console.log(`Updating panel: Area used - ${area}, Objects - ${objects}`);
+          $('#narea').val(area);
           $('#ncount').val(objects);
-          $('#startnest').val(nesters);
       }
   }
 
-
   // Align
-
   $('#position_opts .align_button').on("click", function(){
       $('#align_relative_to').val()
       svgCanvas.alignSelectedElements(this.getAttribute("data-align")[0], 'page');
@@ -113,14 +175,12 @@ MD.Panel = function(){
   });
 
   // Stroke dash
-
   $('#stroke_style').change(function(){
     svgCanvas.setStrokeAttr('stroke-dasharray', $(this).val());
     $("#stroke_style_label").html(this.options[this.selectedIndex].text);
   });
 
   // Segment type
-
   $('#seg_type').change(function() {
     svgCanvas.setSegType($(this).val());
     $("#seg_type_label").html(this.options[this.selectedIndex].text)
@@ -155,7 +215,6 @@ MD.Panel = function(){
   $('#button_group').on("click", editor.groupSelected);
   $('#button_ungroup').on("click", editor.ungroupSelected);
   
-
   function show(elem) {
     $('.context_panel').hide();
     if (elem === "canvas") return $('#canvas_panel').show();
@@ -165,10 +224,21 @@ MD.Panel = function(){
     const target = elem.getAttribute('target');
 
     $("#" + tagName + "_panel").show();
-    if (target === 'bin') {
+
+    if (tagName === 'rect' & target === "bin") {
+      updateNestPanel(elem);
+      $('#umk_material').show()
+      $('#mk_material').hide();
       updateNestPanel(elem);
       $('#nest_panel').show();
+      $('#align_tools').hide();
+      $('#stroke_panel').hide();
     }
+    else {
+      $('#mk_material').show()
+      $('#umk_material').hide();
+    }
+
     const strokeWidth = elem.getAttribute("stroke") && !elem.getAttribute("stroke-width") ? 1 : elem.getAttribute("stroke-width") || 0;
     $('#stroke_width').val(strokeWidth);
     const dash = elem.getAttribute("stroke-dasharray") || "none"
@@ -246,8 +316,10 @@ MD.Panel = function(){
 
     if (!elem && !multiselected) {      
       $("#stroke_panel").hide();
-      $("#canvas_panel").show();
       $('#nest_panel').hide();
+      $('#mk_material').hide()
+      $('#umk_material').hide()
+      $("#canvas_panel").show();
     }
 
     if (elem !== null) {
@@ -301,157 +373,140 @@ MD.Panel = function(){
         var no_path = ['image', 'text', 'path', 'g', 'use'].indexOf(elname) === -1;
         if (no_path) $('.action_path_convert_selected').removeClass('disabled');
         if (elname === "path") $('.action_path_selected').removeClass('disabled');
-
-     }
+      }
      
-     var link_href = null;
-     if (el_name === 'a') {
-       link_href = svgCanvas.getHref(elem);
-       $('#g_panel').show();
-     }
+      var link_href = null;
+      if (el_name === 'a') {
+        link_href = svgCanvas.getHref(elem);
+        $('#g_panel').show();
+      }
      
-     if(elem && elem.parentNode.tagName === 'a') {
-       if(!$(elem).siblings().length) {
-         $('#a_panel').show();
-         link_href = svgCanvas.getHref(elem.parentNode);
-       }
-     }
+      if(elem && elem.parentNode.tagName === 'a') {
+        if(!$(elem).siblings().length) {
+          $('#a_panel').show();
+          link_href = svgCanvas.getHref(elem.parentNode);
+        }
+      }
      
-     // Hide/show the make_link buttons
-     $('#tool_make_link, #tool_make_link').toggle(!link_href);
+      // Hide/show the make_link buttons
+      $('#tool_make_link, #tool_make_link').toggle(!link_href);
      
-     if(link_href) {
-       $('#link_url').val(link_href);
-     }
-     
+      if(link_href) {
+        $('#link_url').val(link_href);
+      }
+      
      // update contextual tools here
      var panels = {
-       g: [],
-       a: [],
-       rect: ['rx','width','height', 'x', 'y'],
-       image: ['width','height', 'x', 'y'],
-       circle: ['cx','cy','r'],
-       ellipse: ['cx','cy','rx','ry'],
-       line: ['x1','y1','x2','y2'], 
-       text: ['x', 'y'],
-       'use': [],
-       path : [],
-       svg : [],
-     };
-     
-     var el_name = elem.tagName;
-     var target = elem.getAttribute("target");     
-     if($(elem).data('gsvg')) {
-       $('#g_panel').show();
-     }
-     
-     if (el_name === "path" || el_name === "polyline") {
-       $('#path_panel').show();
-     }
+      g: [],
+      a: [],
+      rect: ['rx', 'width', 'height', 'x', 'y'],
+      image: ['width', 'height', 'x', 'y'],
+      circle: ['cx', 'cy', 'r'],
+      ellipse: ['cx', 'cy', 'rx', 'ry'],
+      line: ['x1', 'y1', 'x2', 'y2'], 
+      text: ['x', 'y'],
+      'use': [],
+      path : [],
+      svg : [],
+      };
 
-     if(panels[el_name]) {
-       var cur_panel = panels[el_name];
-       $('#' + el_name + '_panel').show();
-       if(target==="bin") {
-          updateNestPanel(elem);
-          $('#nest_panel').show();
-          $('#selected_panel').hide();;
-       }
-       // corner radius has to live in a different panel
-       // because otherwise it changes the position of the 
-       // of the elements
-       if(el_name === "rect") $("#cornerRadiusLabel").show()
-       else $("#cornerRadiusLabel").hide()
-       
-       cur_panel.forEach((item, i) => {
-
-          var attrVal = elem.getAttribute(item);
-         //update the draginput cursors
-         var name_item = document.getElementById(el_name + '_' + item);
-         // find a textPath to put correct x and y
-         if (el_name === "text") {
-           const textPath = elem.querySelector("textPath");
-           if (textPath) {
-            var bb = elem.getBBox();
-            if (bb) attrVal = bb[item];
-           }
-         }
-         name_item.value = Math.round(attrVal) || 0;
-         if (name_item.getAttribute("data-cursor") === "true") {
-           $.fn.dragInput.updateCursor(name_item);
-         }
-       });
-       
-       if(el_name === 'text') {
-         var font_family = elem.getAttribute("font-family") || "default";
-         var cleanFontFamily = font_family.split(",")[0].replace(/'/g, "");
-         var select = document.getElementById("font_family_dropdown");
-         const axis = 
-         $('#text_panel').css("display", "inline");  
-         $('#font_family').val(font_family);
-         $(select).find(`option[value='${cleanFontFamily}']`).prop("selected", true);
-         $('#font_size').val(elem.getAttribute("font-size"));
-         $('#text').val(elem.textContent);
-         $('#preview_font').text(cleanFontFamily).css('font-family', cleanFontFamily === "default" ? "sans-serif" : cleanFontFamily);
-         const textPath = elem.querySelector("textPath");
-         document.getElementById("text_panel").classList.toggle("text-path", textPath);
-         $("#textPath_offset").val(textPath ? textPath.getAttribute("startOffset") : 0);
-       } // text
-       else if(el_name === 'image') {
-          const url = svgCanvas.getHref(elem)
-          if(!url) url = default_img_url;
-          svgCanvas.setImageURL(url);
-          $('#image_url').val(url);
-       } // image
-       else if(el_name === 'g' || el_name === 'use') {
-         $('#container_panel').show();
-         $('.action_group_selected').removeClass('disabled');
-         var title = svgCanvas.getTitle();
-       }
-     }
-     menu_items[(el_name === 'g' ? 'en':'dis') + 'ableContextMenuItems']('#ungroup');
-     menu_items[((el_name === 'g' || !multiselected) ? 'dis':'en') + 'ableContextMenuItems']('#group');
-   }
-   
-   if (multiselected) {
-     $('#multiselected_panel').show();
-     $('.action_multi_selected').removeClass('disabled');
-      const validForNesting = ['rect', 'circle', 'ellipse', 'line', 'text', 'polyline', 'path', 'g'];
-      const canNest = elems.some(el => validForNesting.includes(el.tagName) && el.getAttribute('target') === 'bin');
-      
-
-     menu_items
-       .enableContextMenuItems('#group')
-       .disableContextMenuItems('#ungroup');
-      if (canNest) {
-        $('#nest_panel').show();
+      var el_name = elem.tagName;
+      var target = elem.getAttribute("target");
+      if ($(elem).data('gsvg')) {
+          $('#g_panel').show();
       }
-   } 
-   
-   if (!elem && !multiselected) {
-     menu_items.disableContextMenuItems('#delete,#cut,#copy,#ungroup,#move_front,#move_up,#move_down,#move_back');
-     $('.menu_item', '#edit_menu').addClass('disabled');
-   }
 
-   $('.menu_item', '#object_menu').toggleClass('disabled', !elem && !multiselected);
-   
-   // update history buttons
-   setTimeout(function(){
-     $('#tool_paste').toggleClass( 'disabled', !svgCanvas.clipBoard.length > 0);
-   }, 10)
-   $('#tool_undo').toggleClass( 'disabled', !svgCanvas.undoMgr.getUndoStackSize() > 0);
-   $('#tool_redo').toggleClass( 'disabled', !svgCanvas.undoMgr.getRedoStackSize() > 0);
-   
-   svgCanvas.addedNew = false;
-   
-   if ( (elem && !isNode) || multiselected) {
-     // update the selected elements' layer
-     $('#selLayerNames').removeAttr('disabled').val(svgCanvas.getCurrentDrawing().getCurrentLayerName());
-     
-     // Enable regular menu options
-     $("#cmenu_canvas").enableContextMenuItems('#delete,#cut,#copy,#move_front,#move_up,#move_down,#move_back');
-   }
+      if (el_name === "path" || el_name === "polyline") {
+          $('#path_panel').show();
+      }
+
+      if (panels[el_name]) {
+          if (el_name === 'rect' & target === "bin") {
+            updateNestPanel(elem);
+            $('#umk_material').show()
+            $('#mk_material').hide()
+            $('#nest_panel').show();
+            $('#align_tools').hide();
+            $('#stroke_panel').hide();
+            
+          }
+          else {
+            $('#mk_material').show()
+            $('#umk_material').hide()
+          }
+
+          var cur_panel = panels[el_name];
+          $('#' + el_name + '_panel').show();
+          
+          cur_panel.forEach((item, i) => {
+              var attrVal = elem.getAttribute(item);
+              var name_item = document.getElementById(el_name + '_' + item);
+
+              // Find a textPath to put correct x and y
+              if (el_name === "text") {
+                  const textPath = elem.querySelector("textPath");
+                  if (textPath) {
+                      var bb = elem.getBBox();
+                      if (bb) attrVal = bb[item];
+                  }
+              }
+
+              name_item.value = Math.round(attrVal) || 0;
+              if (name_item.getAttribute("data-cursor") === "true") {
+                  $.fn.dragInput.updateCursor(name_item);
+              }
+          });
+
+          if (el_name === 'text') {
+              // Handle text-specific attributes
+          } else if (el_name === 'image') {
+              // Handle image-specific attributes
+          } else if (el_name === 'g' || el_name === 'use') {
+              $('#container_panel').show();
+              $('.action_group_selected').removeClass('disabled');
+              var title = svgCanvas.getTitle();
+          }
+      }
+      menu_items[(el_name === 'g' ? 'en':'dis') + 'ableContextMenuItems']('#ungroup');
+      menu_items[((el_name === 'g' || !multiselected) ? 'dis':'en') + 'ableContextMenuItems']('#group');
+    }
+
+if (multiselected) {
+  $('#multiselected_panel').show();
+  $('.action_multi_selected').removeClass('disabled');
+  const validForNesting = ['rect', 'circle', 'ellipse', 'line', 'text', 'polyline', 'path'];
+
+  const canNest = elems.some(el => validForNesting.includes(el.tagName) && el.getAttribute('target') === 'bin');
+
+  if (canNest) {
+      $('#nest_panel').show();
+      $('#align_tools').hide();
+      $('#stroke_panel').hide();
   }
+
+  menu_items.enableContextMenuItems('#group').disableContextMenuItems('#ungroup');
+}
+
+if (!elem && !multiselected) {
+  menu_items.disableContextMenuItems('#delete,#cut,#copy,#ungroup,#move_front,#move_up,#move_down,#move_back');
+  $('.menu_item', '#edit_menu').addClass('disabled');
+}
+
+$('.menu_item', '#object_menu').toggleClass('disabled', !elem && !multiselected);
+
+setTimeout(function(){
+  $('#tool_paste').toggleClass('disabled', !svgCanvas.clipBoard.length > 0);
+}, 10);
+$('#tool_undo').toggleClass('disabled', !svgCanvas.undoMgr.getUndoStackSize() > 0);
+$('#tool_redo').toggleClass('disabled', !svgCanvas.undoMgr.getRedoStackSize() > 0);
+
+svgCanvas.addedNew = false;
+
+if ((elem && !isNode) || multiselected) {
+  $('#selLayerNames').removeAttr('disabled').val(svgCanvas.getCurrentDrawing().getCurrentLayerName());
+  $("#cmenu_canvas").enableContextMenuItems('#delete,#cut,#copy,#move_front,#move_up,#move_down,#move_back');
+}
+}
 
   $('#cur_context_panel').delegate('a', 'click', function() {
     var link = $(this);

@@ -29,26 +29,26 @@ class Nester:
         self.nest_result = {}
         for index, material in enumerate(self.materials):
             vertices_list = []
-            img_paths = []
-            translations = []
             rotations = []
             svg_ids = []
+            area_used = 0
+            object_count = 0
 
             for obj, item in zip(self.objects, nested_result):
                 if int(item.bin_id) == index:
                     vertices_list.append([(x, y) for x, y in item.transformed_vertices()])
-                    img_paths.append(obj.img_path)
-                    translations.append(item.translation)
                     rotations.append(item.rotation)
                     svg_ids.append(obj.svg_id)
+                    area_used += float(obj.area)
+                    object_count += 1
 
             self.nest_result[index] = {
                 'material_id': material.bin_id,
                 'vertices_list': vertices_list,
-                'img_paths': img_paths,
-                'translations': translations,
                 'rotations': rotations,
-                'svg_ids': svg_ids
+                'svg_ids': svg_ids,
+                'area_used': float(area_used/float(material.area)),
+                'objects': object_count
             }
 
     @property

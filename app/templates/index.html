@@ -243,6 +243,7 @@
   <div id="rect_panel" class="context_panel">
     <h4>Rectangle</h4>
     <div class="draginputs">
+
       <label class="draginput">
         <input id="rect_x" class="attr_changer" data-title="Change X coordinate" data-attr="x" pattern="[0-9]*" />
         <span>X</span> 
@@ -251,32 +252,37 @@
         <input id="rect_y" class="attr_changer" data-title="Change Y coordinate" data-attr="y" pattern="[0-9]*" />
         <span>Y</span> 
       </label>
-      <label  class="draginput" id="rect_width_tool attr_changer" data-title="Change rectangle width">
+      <label class="draginput" id="rect_width_tool attr_changer" data-title="Change rectangle width">
         <input id="rect_width" class="attr_changer" data-attr="width" type="text" pattern="[0-9]*" />
         <span class="icon_label">Width</span>
       </label>
-      <label  class="draginput" id="rect_height_tool" data-title="Change rectangle height">
+      <label class="draginput" id="rect_height_tool" data-title="Change rectangle height">
         <input id="rect_height" class="attr_changer" data-attr="height" type="text" pattern="[0-9]*" />
         <span class="icon_label">Height</span>
       </label>
     </div>
   </div>
-
+  
+  <!-- Nút mới Add Material -->
+  <div class="button full" id="mk_material" title="Make Material"> Make Material</div>
+  <div class="button full" id="umk_material" title="UnMake Material"> UnMake Material</div>  
   
   <div id="nest_panel" class="context_panel">
     <h4>Nester Configuration</h4>
     <div class="draginputs">
         <label class="draginput">
-          <input id="nmachine" class="attr_changer" data-attr="machine" size="2" value="1" min="0" max="100" step="1" data-format="percent" />
-          <span>Machine</span>
+            <input id="nmachine" class="attr_changer" data-attr="machine" size="2" value="1" min="0" max="100" step="1" type="number" />
+            <span>Machine</span>
         </label>
-    
+
         <label class="draginput">
-          <input id="startnest" data-attr="nesters" type="text" pattern="[0-9]*" />
-          <span>Nesters<span>
+            <input id="add_padding" class="attr_changer" data-attr="padding" size="2" value="0" min="0" step="0.01" type="number" />
+            <span>Padding</span>
         </label>
-      
+
+        <label class="button full" id="startnest" title="Start Nesting"> Nesting Objects </label>
     </div>
+
     <h4>Nester Information</h4>
     <div class="draginputs">
         <label class="draginput">
@@ -288,7 +294,8 @@
             <span>Objects</span>
         </label>
     </div>
-  </div>
+</div>
+
 
   <div id="path_panel" class="context_panel clearfix">
       <h4>Path</h4>
