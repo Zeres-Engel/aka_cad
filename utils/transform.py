@@ -13,16 +13,16 @@ def sort_points(points, clockwise=True):
     
     return points[sorted_indices]
 # Utility functions
-def rotate_point(point, angle, origin=(0, 0)):
-    """Rotate a point around a given origin."""
+def rotate_points(points, angle, origin=(0, 0)):
     ox, oy = origin
-    px, py = point
+    px, py = points.T  # Transpose to get x, y columns
     cos_angle, sin_angle = np.cos(angle), np.sin(angle)
 
     qx = ox + cos_angle * (px - ox) - sin_angle * (py - oy)
     qy = oy + sin_angle * (px - ox) + cos_angle * (py - oy)
-    
-    return qx, qy
+
+    return np.column_stack([qx, qy])
+
 
 def calculate_centroid(points):
     """Calculate the centroid of a set of points."""
@@ -30,9 +30,8 @@ def calculate_centroid(points):
 
 def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
     """Apply transformation to an SVG element based on polygon and translation."""
-    polygon_centroid = calculate_centroid(polygon)
-    polygon_centroid = polygon_centroid + np.array([dx, dy])
-    print(polygon_centroid)
+    polygon_centroid = calculate_centroid(polygon) + np.array([dx, dy])
+    # Chuyển đổi chức năng dựa trên nhãn SVG tag
     tag = elem.tag.split('}')[-1]
 
     transform_functions = {
@@ -49,7 +48,6 @@ def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
 
     if tag in transform_functions:
         transform_functions[tag](elem, polygon_centroid, angle)
-        # transform_svg_element[tag]
 
     return elem
 
