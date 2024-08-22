@@ -7,7 +7,7 @@ def handle_nesting_request():
     data = request.get_json()
     svg_ids = data.get('svg_ids')
     svg_content = data.get('svg_content')
-    padding = float(data.get('padding', 0.2))
+    padding = float(data.get('padding', 0.5))
 
     # Initialize SVGManager and Nester
     svgmanager = SVGManager(svg_content)

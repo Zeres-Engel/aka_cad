@@ -32,7 +32,7 @@ def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
     """Apply transformation to an SVG element based on polygon and translation."""
     polygon_centroid = calculate_centroid(polygon)
     polygon_centroid = polygon_centroid + np.array([dx, dy])
-
+    print(polygon_centroid)
     tag = elem.tag.split('}')[-1]
 
     transform_functions = {
@@ -54,8 +54,8 @@ def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
 
 def apply_transform_to_rect(elem, centroid, angle):
     """Apply transformation to a rectangle element."""
-    width, height = float(elem.get('width', 0)), float(elem.get('height', 0))
-    x, y = centroid[0] - width / 2, centroid[1] - height / 2
+    width, height = int(elem.get('width', 0)), int(elem.get('height', 0))
+    x, y = float(centroid[0]) - width / 2, float(centroid[1]) - height / 2
     points = np.array([[x, y], [x + width, y], [x + width, y + height], [x, y + height]])
     rotated_points = np.array([rotate_point(point, angle, origin=centroid) for point in points])
 
@@ -63,8 +63,8 @@ def apply_transform_to_rect(elem, centroid, angle):
     max_x, max_y = np.max(rotated_points, axis=0)
     elem.set('x', str(min_x))
     elem.set('y', str(min_y))
-    elem.set('width', str(max_x - min_x))
-    elem.set('height', str(max_y - min_y))
+    elem.set('width', str(width))
+    elem.set('height', str(height))
 
 def apply_transform_to_circle_or_ellipse(elem, centroid, angle):
     """Apply transformation to a circle or ellipse element."""
@@ -129,8 +129,8 @@ def apply_transform_to_image(elem, centroid, angle):
     max_x, max_y = np.max(rotated_points, axis=0)
     elem.set('x', str(min_x))
     elem.set('y', str(min_y))
-    elem.set('width', str(max_x - min_x))
-    elem.set('height', str(max_y - min_y))
+    elem.set('width', str(int(width)))
+    elem.set('height', str(int(height)))
 
 # Rotation function
 def transform_rotation(elem, bin_elem):
