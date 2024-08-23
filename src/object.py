@@ -7,7 +7,7 @@ class Object:
             if isinstance(points, list) and all(isinstance(p, Point) for p in points):
                 self.item = Item(points)
             elif isinstance(points, np.ndarray):
-                points = [Point(int(x), int(y)) for [x, y] in points]
+                points = [Point(float(x), float(y)) for [x, y] in points]
                 self.item = Item(points)
             else:
                 raise ValueError("Invalid input: must provide a list of Point objects or a numpy array of points")
@@ -15,7 +15,7 @@ class Object:
             points = get_polygon_from_img(img_path)
             if points is None:
                 raise ValueError("Cannot extract points from image at the provided path.")
-            points = [Point(int(x), int(y)) for [x, y] in points]
+            points = [Point(float(x), float(y)) for [x, y] in points]
             self.item = Item(points)
         else:
             raise ValueError("Invalid input: must provide a numpy array of points or a valid image path")

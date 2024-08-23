@@ -19,7 +19,7 @@ PYBIND11_MODULE(aka_cad, m)
     m.doc() = "2D irregular bin packaging and nesting for python";
 
     py::class_<Point>(m, "Point", "2D Point")
-        .def(py::init<int, int>(),  py::arg("x"), py::arg("y"))
+        .def(py::init<float, float>(),  py::arg("x"), py::arg("y"))
         //.def_property_readonly("x", &Point::X)
         .def_property_readonly("x", [](const Point &p) { return p.X; })
         .def_property_readonly("y", [](const Point &p) { return p.Y; })
@@ -95,7 +95,7 @@ PYBIND11_MODULE(aka_cad, m)
 
         .def("transformed_vertices",
              [](const Item &item) {
-                 std::vector<std::pair<int, int>> vertices;
+                 std::vector<std::pair<float, float>> vertices;
                  const auto &shape = item.transformedShape();
 
                  namespace sl = libnest2d::shapelike;
@@ -121,7 +121,7 @@ PYBIND11_MODULE(aka_cad, m)
         )
         .def("raw_vertices",
              [](const Item &item) {
-                 std::vector<std::pair<int, int>> vertices;
+                 std::vector<std::pair<float, float>> vertices;
                  const auto &shape = item.rawShape();
 
                  namespace sl = libnest2d::shapelike;
