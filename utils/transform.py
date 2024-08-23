@@ -57,6 +57,10 @@ def transform_svg_element(elem, polygon, dx=0, dy=0, angle=0):
     }
 
     if tag in transform_functions:
+        min_x, min_y = np.min(translated_polygon, axis=0)
+        max_x, max_y = np.max(translated_polygon, axis=0)
+        print(translated_polygon)
+        print(polygon_centroid)
         transform_functions[tag](elem, polygon_centroid, angle)
 
     return elem
@@ -73,6 +77,9 @@ def apply_transform_to_rect(elem, centroid, angle):
     
     min_x, min_y = np.min(rotated_points, axis=0)
     max_x, max_y = np.max(rotated_points, axis=0)
+    
+    print(rotated_points)
+    print(calculate_centroid(rotated_points))
     
     elem.set('x', format_float(min_x))
     elem.set('y', format_float(min_y))

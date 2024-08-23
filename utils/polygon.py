@@ -160,8 +160,8 @@ def compute_convex_hull(points):
     if len(points) < 3:
         return points
     convex_hull = cv2.convexHull(points).reshape(-1, 2)
-    sorted_points = sort_points(convex_hull) 
-    return np.vstack([sorted_points, sorted_points[0]]) if not np.array_equal(sorted_points[0]) else sorted_points
+    sorted_points = sort_points(convex_hull)
+    return np.vstack([sorted_points, sorted_points[0]]) if not np.array_equal(sorted_points[0], sorted_points[-1]) else sorted_points
 
 def add_padding(points, padding=2):
     """Add padding to the polygon, expanding it from its center while keeping the centroid fixed."""
