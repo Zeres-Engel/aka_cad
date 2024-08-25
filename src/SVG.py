@@ -17,6 +17,7 @@ class SVGManager:
         self.tree = ET.ElementTree(ET.fromstring(content))
         self.elements = {}
         self.index_elements()
+        self.process_elements()
 
     def index_elements(self):
         """Index all elements with an ID in the SVG."""
@@ -76,13 +77,8 @@ class SVGManager:
         root = self.tree.getroot()
         
         for elem in root.iter():
-            if elem.tag.lower() == 'rect' and elem.attrib.get('target') == 'bin':
-                # Keep rect elements with target="bin" unchanged
-                continue
-            else:
-                # Remove the transform attribute from other elements if it exists
-                if 'transform' in elem.attrib:
-                    del elem.attrib['transform']
+            if 'transform' in elem.attrib:
+                del elem.attrib['transform']
 
     def get_svg_content(self):
         """Return the updated SVG content as a plain XML string with the necessary namespace."""

@@ -1,7 +1,7 @@
 from flask import request
 import numpy as np
 from src import SVGManager, Nester, Object, Material
-from .transform import transform_svg_element, transform_rotation
+from .transform import transform_svg_element
 
 def get_request_data():
     """Extract data from the request."""
@@ -14,6 +14,7 @@ def get_request_data():
 def initialize_managers(svg_content):
     """Initialize SVGManager and Nester instances."""
     svgmanager = SVGManager(svg_content)
+    
     nester = Nester()
     return svgmanager, nester
 
@@ -66,7 +67,6 @@ def process_nest_data(nest_data, svgmanager):
             dy=bin_y,
             angle=rotation
         )
-        transformed_elem = transform_rotation(transformed_elem, bin_elem)
         svgmanager.update_element(svg_id, transformed_elem)
 
 def handle_nesting_request():
