@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -O3 -DNDEBUG  -shared  -o aka_cad.cpython-38-x86_64-linux-gnu.so CMakeFiles/aka_cad.dir/src/main.cpp.o -flto -lpthread /usr/lib/x86_64-linux-gnu/libpolyclipping.so /usr/lib/x86_64-linux-gnu/libnlopt.so 

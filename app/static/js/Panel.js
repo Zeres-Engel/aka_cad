@@ -94,10 +94,10 @@ MD.Panel = function(){
   $('#add_padding').dragInput({
       min: 0,
       max: null,
-      step: 0.01,
+      step: 1,
       callback: editor.changeAttribute,
       cursor: true,
-      start: 0    
+      start: 2 
   });
 
   $('#startnest').on('click', function() {

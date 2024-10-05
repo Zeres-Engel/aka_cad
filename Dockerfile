@@ -37,5 +37,6 @@ RUN mkdir build && cd build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=$(which python3) && \
     cmake --build . --config Release -- -j2
 
+ENV PYTHONPATH /app/aka_cad/build:$PYTHONPATH
 # Enter into a shell when running the container
 CMD ["/bin/bash"]

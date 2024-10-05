@@ -5,31 +5,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 import io
 from svgpathtools import parse_path
-
 from utils import sort_points
-
-def apply_transform(points, transform_str):
-    """Apply transform operations (translate, rotate, scale) to the points."""
-    if not transform_str:
-        return points
-
-    transform_ops = re.findall(r'(\w+)\(([^)]+)\)', transform_str)
-    for op, params in transform_ops:
-        params = list(map(float, re.split(r'[ ,]', params.strip())))
-        if op == 'translate':
-            dx, dy = params[0], params[1] if len(params) > 1 else 0
-            points[:, 0] += dx
-            points[:, 1] += dy
-        elif op == 'rotate':
-            angle = np.radians(params[0])
-            cx, cy = params[1:3] if len(params) == 3 else np.mean(points, axis=0)
-            points = rotate_points(points, angle, origin=(cx, cy))
-        elif op == 'scale':
-            sx = params[0]
-            sy = params[1] if len(params) > 1 else sx
-            center = np.mean(points, axis=0)
-            points = center + (points - center) * [sx, sy]
-    return points
 
 def rotate_points(points, angle, origin=(0, 0)):
     """Rotate an array of points around a given origin."""
@@ -47,33 +23,27 @@ def rotate_points(points, angle, origin=(0, 0)):
 def process_shape(elem, process_func, padding=2):
     """Generic shape processing function."""
     points = process_func(elem)
-    
-    # Apply transform if it exists
-    transform_str = elem.attrib.get('transform')
-    if transform_str:
-        points = apply_transform(points, transform_str)
-    
     return add_padding(compute_convex_hull(points), padding)
 
 def process_ellipse(elem, padding=2):
     """Process an ellipse element."""
     cx, cy = float(elem.attrib['cx']), float(elem.attrib['cy'])
     rx, ry = float(elem.attrib['rx']), float(elem.attrib['ry'])
-    theta = np.linspace(0, 2 * np.pi, 100)
-    x = cx + rx * np.cos(theta)
-    y = cy + ry * np.sin(theta)
+    theta = np.linspace(0, 2 * np.pi, 15)
+    x = cx + (rx +padding + 0.5) * np.cos(theta)
+    y = cy + (ry + padding + 0.5) * np.sin(theta)
     points = np.vstack((x, y)).T
-    return process_shape(elem, lambda e: points, padding)
+    return points
 
 def process_circle(elem, padding=2):
     """Process a circle element."""
     cx, cy = float(elem.attrib['cx']), float(elem.attrib['cy'])
     r = float(elem.attrib['r'])
-    theta = np.linspace(0, 2 * np.pi, 100)
-    x = cx + r * np.cos(theta)
-    y = cy + r * np.sin(theta)
+    theta = np.linspace(0, 2 * np.pi, 15)
+    x = cx + (r + padding + 0.5) * np.cos(theta)
+    y = cy + (r + padding + 0.5) * np.sin(theta)
     points = np.vstack((x, y)).T
-    return process_shape(elem, lambda e: points, padding)
+    return points
 
 def process_rect(elem, padding=2):
     """Process a rectangle element."""
