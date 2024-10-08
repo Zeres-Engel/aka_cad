@@ -1,0 +1,475 @@
+.homePage {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.899);
+    color: white;
+    transition: 2s;
+}
+.homePageClose {
+    width: 0;
+    visibility: hidden;
+    opacity: 0;
+}
+.homePageHeader {
+    background-color: rgba(0, 0, 0, 0.773);
+    box-shadow: 0px 0px 10px white;
+    width: 100vw;
+    height: 15%;
+    max-height: 100px;
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: 4s;
+    transition-delay: 1s;
+}
+.homePageHeaderClose {
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+}
+.mainLogo {
+    cursor: pointer;
+    width: 20%;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 35px;
+}
+.navBar {
+    height: 55%;
+    width: 60%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.navList {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 80%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    position: relative;
+}
+.nav-item {
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 100%;
+    list-style: none;
+    cursor: pointer;
+    transition: 1s;
+}
+.formatSVG {
+    margin-left: 10px;
+    width: 16px;
+}
+.formatSVGLogin {
+    margin-left: 5px;
+    width: 23px;
+    margin-top: 3px;
+}
+.nav-item:hover {
+    box-shadow: 0px 0px 5px white;
+}
+.homePageContent {
+    display: flex;
+    justify-content: space-evenly;
+    /* flex-direction: column; */
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 85%;
+    transition: 2s;
+}
+.homePageContentCloseContent {
+    opacity: 0;
+    visibility: hidden;
+}
+.landingContent {
+    align-self: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80%;
+    overflow-wrap: break-word;
+    width: 80%;
+}
+.homePageContent1 {
+    height: max-content;
+    width: max-content;
+    text-align: center;
+}
+#homePageContent1 {
+    font-size: 30px;
+    font-weight: 600;
+}
+#homePageContent2 {
+    width: 60%;
+    line-height: 6rem;
+    font-size: 80px;
+}
+#homePageContent3 {
+    font-size: 30px;
+    font-weight: 600;
+}
+#homePageContent4 {
+    font-weight: 500;
+    width: 60%;
+    line-height: 1.5rem;
+    font-size: 20px;
+    word-spacing: 1px;
+}
+.floatingSVG {
+    position: absolute;
+}
+#floatingSVG1 {
+    top: 10%;
+    left: 10%;
+    transform: rotate(40deg);
+}
+#floatingSVG2 {
+    top: 5%;
+    left: 30%;
+}
+#floatingSVG3 {
+    animation: infinite 10s rotateSVG;
+    top: 20%;
+    right: 15%;
+}
+#floatingSVG4 {
+    top: 75%;
+    left: 30%;
+    transform: rotate(90deg);
+    animation: infinite 20s flyingSvg;
+}
+#floatingSVG5 {
+    top: 50%;
+    right: 8%;
+    animation: infinite 5s zoomSvg;
+}
+#floatingSVG6 {
+    top: 45%;
+    left: 15%;
+    animation:
+        shakeSvg 1000ms ease-in-out infinite,
+        delay-animation 2000ms linear infinite;
+    animation-delay: 2s;
+}
+@keyframes flyingSvg {
+    0% {
+        top: 75%;
+        left: 30%;
+    }
+    25% {
+        top: 85%;
+        left: 70%;
+    }
+    50% {
+        transform: rotate(360deg);
+    }
+    75% {
+        top: 75%;
+        left: 30%;
+    }
+    100% {
+        transform: rotate(450deg);
+    }
+}
+@keyframes rotateSVG {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+@keyframes zoomSvg {
+    0% {
+        scale: 80%;
+        opacity: 0;
+    }
+    50% {
+        scale: 110%;
+        opacity: 1;
+    }
+    100% {
+        scale: 80%;
+        opacity: 0;
+    }
+}
+@keyframes shakeSvg {
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+.loginForm {
+    transition: 2s;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 15%;
+    position: absolute;
+    bottom: 0;
+    width: 70%;
+    height: 85%;
+}
+.loginFormClose{
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+.loginFormPopUp {
+    opacity: 1;
+    visibility: visible;
+}
+.selectLogin {
+    border: solid rgba(255, 255, 255, 0.677) 1px;
+    position: absolute;
+    top: 5%;
+    border-radius: 10px;
+    transition: ease 2s;
+    box-shadow: 0px 0px 15px white;
+}
+#loginForm {
+    box-shadow: 0px 0px 15px white;
+    display: flex;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 5%;
+    width: 50%;
+    height: 70%;
+    backdrop-filter: blur(20px);
+    transition: 2s ease;
+}
+.loginButton {
+    all: unset;
+    width: 150px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+.formType {
+    z-index: -1;
+    right: 50%;
+    border-radius: 10px;
+    position: absolute;
+    transition: 2s ease;
+    padding: 25px 76px;
+    background-color: rgba(255, 255, 255, 0.44);
+}
+.loginButton:first-of-type:hover ~ .formType {
+    right: 50%;
+    padding: 25px 76px;
+}
+.loginButton:last-of-type:hover ~ .formType {
+    right: 0%;
+    padding: 25px 77px;
+}
+.loginButton:last-of-type:hover ~ .formTypeRegister {
+    right: 0%;
+    padding: 25px 77px;
+}
+.selectRegister {
+    right: 0%;
+    padding: 25px 77px;
+}
+.loginButton:hover {
+    all: unset;
+    width: 150px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    transition: 2s ease;
+}
+.loginFormField {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    transition: 2s ease;
+}
+.hiddenLoginField {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loginFormField input {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: solid white 1px;
+    color: white;
+    min-width: 200px;
+    max-width: 300px;
+    width: 80%;
+    height: 100%;
+}
+.loginFormField input::placeholder {
+    font-weight: bold;
+    opacity: 0.5;
+    color: rgb(231, 231, 231);
+}
+#sumbitLogin {
+    all: unset;
+    position: absolute;
+    bottom: 5%;
+    width: 150px;
+    height: 50px;
+    background-color: rgba(0, 128, 0, 0);
+    text-align: center;
+    box-shadow: 0px 0px 15px white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 2s ease;
+}
+#sumbitLogin:hover {
+    background-color: rgba(182, 181, 181, 0.515);
+}
+.responsiveLoginButton{
+    background-color: rgba(255, 255, 255, 0.44) !important;
+}
+@media only screen and (max-width: 1400px) {
+    .landingContent {
+        align-self: auto;
+    }
+    .homePageContent1 {
+        backdrop-filter: blur(2px);
+    }
+    #loginForm {
+        width: 80% !important;
+    }
+}
+@media only screen and (max-width: 1400px) {
+    /* .navList{
+        width: 100%;
+    } */
+    .nav-item {
+        width: 100%;
+    }
+    /* .navBar{
+        scale: 80%;
+    } */
+}
+@media only screen and (max-width: 1100px) {
+    #loginForm {
+        width: 100% !important;
+    }
+}
+@media only screen and (max-width: 865px) {
+    .loginFormField {
+        width: 90%;
+    }
+}
+@media only screen and (max-width: 780px) {
+    .landingContent {
+        scale: 60%;
+    }
+    .navList {
+        position: relative;
+        left: 15%;
+        justify-content: center;
+        width: 100%;
+    }
+    .nav-item {
+        width: 30%;
+    }
+    .nav-item:last-of-type {
+        width: 50%;
+    }
+}
+@media only screen and (max-width: 700px) {
+    #homePageContent1 {
+        line-height: 2rem;
+        width: 100%;
+    }
+    #homePageContent2 {
+        width: 100%;
+    }
+    #homePageContent3 {
+        width: 100%;
+        line-height: 2rem;
+    }
+    #homePageContent4 {
+        width: 100%;
+    }
+    #loginForm {
+        width: 100% !important;
+        height: 90% !important;
+    }
+    .loginFormField {
+        width: 90%;
+        flex-direction: column;
+    }
+    .navBar {
+        position: relative;
+        right: -30px;
+        scale: 80%;
+    }
+    .navList {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .nav-item {
+        width: 100% !important;
+    }
+    .mainLogo {
+        scale: 70%;
+    }
+}
+@media only screen and (min-width: 450px){
+    .responsiveLoginButton{
+        background-color: rgba(0, 255, 255, 0) !important; 
+    }
+}
+@media only screen and (max-width: 450px) {
+    .selectLogin {
+        width: 100%;
+        scale: 70% !important;
+        display: flex;
+        flex-wrap: wrap;
+        top: 2%;
+    }
+    .loginButton {
+        width: 100% !important;
+    }
+    .formType {
+        display: none;
+        width: 33%;
+        right: 0;
+    }
+}

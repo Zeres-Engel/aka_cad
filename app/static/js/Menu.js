@@ -34,7 +34,10 @@ MD.Menu = function(){
     return false;
   }
 
+  const isEdit = ['email','password','userName','rePass']
+
   function close(e){
+    if(isEdit.includes(e.target.id)) return true;
     if (e.target.nodeName && e.target.nodeName.toLowerCase() === "input") return false;
     if (!$(e.target).hasClass("menu_title") && !$(e.target).parent().hasClass("menu_title")) {
       if(!$(e.target).hasClass("disabled") && $(e.target).hasClass("menu_item")) blink(e.target)
