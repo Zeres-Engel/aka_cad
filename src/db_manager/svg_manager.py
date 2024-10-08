@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-class SVGManager:
+class SVGeditorManager:
     def __init__(self, db):
         self.collection = db['svg_sources']
 

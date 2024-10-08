@@ -20,3 +20,5 @@ class UserManager:
     def update_user(self, user_id, update_data):
         result = self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': update_data})
         return result.modified_count > 0
+    # def verify_mail(self,user_id):
+    #     return self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': {"email_verified":True}})

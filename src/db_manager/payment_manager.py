@@ -16,3 +16,5 @@ class PaymentManager:
 
     def get_user_payments(self, user_id):
         return list(self.collection.find({'user_id': ObjectId(user_id)}))
+
+password= "BFHZVZm3yefW7CFP"

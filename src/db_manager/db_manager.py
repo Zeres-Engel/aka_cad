@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from .user_manager import UserManager
-from .svg_manager import SVGManager
+from .svg_manager import SVGeditorManager
 from .payment_manager import PaymentManager
 
 class DBManager:
@@ -8,7 +8,7 @@ class DBManager:
         self.client = MongoClient(connection_string)
         self.db = self.client['svg_editor_db']
         self.user_manager = UserManager(self.db)
-        self.svg_manager = SVGManager(self.db)
+        self.svg_manager = SVGeditorManager(self.db)
         self.payment_manager = PaymentManager(self.db)
 
     def close_connection(self):
