@@ -17,3 +17,18 @@ class SVGeditorManager:
 
     def get_user_svgs(self, user_id):
         return list(self.collection.find({'user_id': ObjectId(user_id)}))
+
+    def clear_collection(self):
+        self.collection.delete_many({})
+
+    def save_svg_content(self, user_id, svg_content):
+        result = self.collection.update_one(
+            {'user_id': ObjectId(user_id)},
+            {'$set': {'svg_content': svg_content}},
+            upsert=True
+        )
+        return str(result.upserted_id) if result.upserted_id else None
+
+    def get_svg_content(self, user_id):
+        svg_doc = self.collection.find_one({'user_id': ObjectId(user_id)})
+        return svg_doc['svg_content'] if svg_doc else None

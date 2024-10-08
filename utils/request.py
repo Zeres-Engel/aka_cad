@@ -1,6 +1,9 @@
 from flask import request
 import numpy as np
-from src import SVGManager, Nester, Object, Material
+from src.SVG import SVGManager
+from src.nester import Nester
+from src.object import Object
+from src.material import Material
 from .transform import transform_svg_element
 
 def get_request_data():

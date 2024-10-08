@@ -1,24 +1,46 @@
 from bson import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class UserManager:
     def __init__(self, db):
         self.collection = db['users']
 
     def create_user(self, username, password, email):
+        existing_username = self.get_user_by_username(username)
+        existing_email = self.get_user_by_email(email)
+
+        if existing_username:
+            return None, "Username already exists"
+        if existing_email:
+            return None, "Email already exists"
+
         user = {
             'username': username,
-            'password': password,  # Note: In a real application, you should hash the password
+            'password': generate_password_hash(password),
             'email': email,
             'is_premium': False
         }
         result = self.collection.insert_one(user)
-        return str(result.inserted_id)
+        return str(result.inserted_id), None
 
     def get_user(self, user_id):
         return self.collection.find_one({'_id': ObjectId(user_id)})
 
+    def get_user_by_username(self, username):
+        return self.collection.find_one({'username': username})
+
+    def get_user_by_email(self, email):
+        return self.collection.find_one({'email': email})
+
     def update_user(self, user_id, update_data):
         result = self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': update_data})
         return result.modified_count > 0
-    # def verify_mail(self,user_id):
-    #     return self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': {"email_verified":True}})
+
+    def authenticate_user(self, username_or_email, password):
+        user = self.get_user_by_username(username_or_email) or self.get_user_by_email(username_or_email)
+        if user and check_password_hash(user['password'], password):
+            return user
+        return None
+
+    def clear_collection(self):
+        self.collection.delete_many({})
