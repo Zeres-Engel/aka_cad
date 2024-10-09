@@ -294,8 +294,6 @@ function paymentRequest(amount) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      user_id: userId, // Truyền user_id của người dùng
-      amount: amount, // Giá tiền gói dịch vụ
       user_id: userId,
       amount: amount,
     }),
@@ -332,3 +330,36 @@ function showPremiumNeedNesting(){
     return;
 }
   localStorage.clear();
+
+function saveSVGSource() {
+    const userId = localStorage.getItem("user_id");
+    const svgContent = svgCanvas.getSvgString();
+
+    if (!userId) {
+        alert("Please log in to save your SVG source.");
+        return;
+    }
+
+    fetch("/save_svg_source", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            svg_content: svgContent
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "SVG source saved successfully") {
+            alert("SVG source saved successfully!");
+        } else {
+            alert("Failed to save SVG source: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while saving the SVG source. Please try again.");
+    });
+}
