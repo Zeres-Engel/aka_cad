@@ -234,10 +234,12 @@
     <div class="menu_list inverted-undo">
       <!-- <div id="modal_about" class="menu_item" data-action="about">About this app...</div> -->
       <div class="separator"></div>
+      <div class="menu_item" id="user_info_display"></div>
       <div id="modal_preferences" class="menu_item" onclick="openTutorial()">Tutorial...</div>
       <div id="modal_preferences" class="menu_item" data-action="configure">Configure...</div>
       <div id="modal_shortcuts" class="menu_item" data-action="shortcuts">Keyboard Shortcuts...</div>
       <div id="modal_donate" class="menu_item" data-action="donate">Donate or sponsor...</div>
+      
     </div>
   </a>
 
@@ -317,12 +319,8 @@
         <div class="menu_item" id="tool_source" data-action="source">Source... <span class="shortcut">⌘U</span></div>
     </div>
   </div>
-  
-  <div class="menu">
-    <div class="user_info" id="user_info" style="padding: 5px 10px;">
-        Username: <span id="username_text"></span> | Premium: <span id="premium_text"></span>
-    </div>
-  </div>
+
+
 
   <div class="menu-right">
   <button class="menu-icon" id="darkmode-button">

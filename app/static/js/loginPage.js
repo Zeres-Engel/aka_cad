@@ -92,8 +92,9 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
+            localStorage.setItem('email', data.email);
             localStorage.setItem('isPremium', data.isPremium);
-            updateUserUI(data.username, data.isPremium)
+            updateUserUI(data.username, data.email, data.isPremium);
             closeHomePage();
             // Redirect or update UI as needed
             // For example: window.location.href = "/dashboard";
@@ -315,10 +316,25 @@ function paymentRequest(amount) {
     });
 }
 
-function updateUserUI(username, premium_id) {
-    const userInfoDiv = document.getElementById('user_info');
-    userInfoDiv.textContent = `User: ${username} | Premium: ${premium_id}`;
+function updateUserUI(username, email, premium_id) {
+    // Lấy phần tử HTML để hiển thị thông tin người dùng
+    const userInfoDisplay = document.getElementById('user_info_display');
+    userInfoDisplay.innerHTML = `
+        <strong>Username:</strong> ${username} <br>
+        <strong>Email:</strong> ${email} <br>
+        <strong>Premium ID:</strong> ${premium_id}
+    `;
 }
+
+// Tự động tải thông tin người dùng nếu đã có trong localStorage (ví dụ: khi tải lại trang)
+window.onload = function() {
+    const savedUsername = localStorage.getItem('username');
+    const savedEmail = localStorage.getItem('email');
+    const savedPremiumId = localStorage.getItem('premium_id');
+    if (savedUsername && savedEmail && savedPremiumId) {
+        updateUserUI(savedUsername, savedEmail, savedPremiumId);
+    }
+};
 
 function showPremiumNeedNesting(){
     const isPremium = Number(localStorage.getItem('isPremium'));
