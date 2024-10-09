@@ -162,3 +162,6 @@ function openTutorial(){
         navItem[navItem.length-1].classList.add('openReturn')
     },1000)
 }
+function paymentRequest(price) {
+    
+}
