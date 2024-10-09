@@ -250,11 +250,16 @@ function openQuestion(ulNo) {
   qna[ulNo].classList.add("qnaOpen");
   return;
 }
-function openTutorial() {
+function openTutorial(type = 0) {
   const isPremium = Number(localStorage.getItem('isPremium'));
-  if (![1,2,3,4].includes(isPremium)) {
+  if (![1,2,3,4].includes(isPremium) && type === 1) {
     document.getElementById('tutorialContainer').classList.add('hidePayment')
-    return;
+    document.getElementById('questionAnswer').classList.add('hidePayment')
+    document.getElementById('contactContainer').classList.add('hidePayment')
+  } else{
+    document.getElementById('tutorialContainer').classList.remove('hidePayment')
+    document.getElementById('questionAnswer').classList.remove('hidePayment')
+    document.getElementById('contactContainer').classList.remove('hidePayment')
   }
   document.getElementById("homePage").classList.remove("homePageClose");
   closeTooltip()
