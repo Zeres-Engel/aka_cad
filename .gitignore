@@ -1,4 +1,4 @@
 report/~$report.pptx
 *.pptx
 *.pyc
-
+*/__pycache__
