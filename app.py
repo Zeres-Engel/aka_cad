@@ -137,8 +137,27 @@ def payment_cancel():
     db_manager.payment_manager.update_payment_status(order_code, 'cancelled')
     return jsonify({"message": "Payment cancelled"}), 200
 
+@app.route('/save_svg_source', methods=['POST'])
+def save_svg_source():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    svg_content = data.get('svg_content')
+
+    if not user_id or not svg_content:
+        return jsonify({"message": "Missing required fields"}), 400
+
+    # Check if the user exists
+    user = db_manager.user_manager.get_user(user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    # Save the SVG content
+    db_manager.svg_manager.save_svg_content(user_id, svg_content)
+
+    return jsonify({"message": "SVG source saved successfully"}), 200
+
 if __name__ == '__main__':
-    db_manager.initialize_database()
+    # db_manager.initialize_database()
     try:
         app.run(host='0.0.0.0', port=5000, debug=True)
     finally:
