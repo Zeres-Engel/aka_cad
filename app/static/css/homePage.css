@@ -1,7 +1,7 @@
 .homePage {
     width: 100vw;
     height: 100vh;
-    position: relative;
+    position: absolute;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.899);
     color: #66FCF1 !important;
