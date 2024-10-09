@@ -92,19 +92,14 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
-<<<<<<< HEAD
             localStorage.setItem('isPremium', data.premium_id);
-            updateUserUI(data.username, data.premium_id);
+            localStorage.setItem('email', data.email);
+            updateUserUI(data.username, data.email, data.isPremium);
             
             if (data.svg_content) {
                 loadSVGContent(data.svg_content);
             }
             
-=======
-            localStorage.setItem('email', data.email);
-            localStorage.setItem('isPremium', data.isPremium);
-            updateUserUI(data.username, data.email, data.isPremium);
->>>>>>> 629e4dfeec97ce575b1d73497d0a6df1cd1cf719
             closeHomePage();
         } else if (data.message === "Incorrect password") {
             alert("Login failed: Incorrect password");
