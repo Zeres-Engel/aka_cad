@@ -56,12 +56,8 @@ def register():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    fullname = data.get('fullname')
 
-    if not username or not email or not password or not fullname:
-        return jsonify({"message": "Missing required fields"}), 400
-
-    user_id, error_message = db_manager.user_manager.create_user(username, password, email, fullname)
+    user_id, error_message = db_manager.user_manager.create_user(username, password, email)
 
     if user_id:
         return jsonify({"message": "User registered successfully!", "user_id": user_id}), 201

@@ -60,38 +60,43 @@ function changeLogin(isLogin,event){
 
 function handleLogin(event) {
     event.preventDefault();
-    const username_or_email = document.getElementById('userName').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById("userName").value;
+    const password = document.getElementById("password").value;
 
-    fetch('/login', {
-        method: 'POST',
+    if (!username || !password) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    fetch("/login", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            username_or_email: username_or_email,
+            username_or_email: username,
             password: password
-        }),
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.message === "Login successful") {
-            alert(`Login successful! Welcome, ${data.username}!`);
-            // Lưu thông tin người dùng vào localStorage hoặc sessionStorage
+            alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
-            localStorage.setItem('premium_id', data.premium_id);
-            // Chuyển hướng người dùng đến trang chính hoặc đóng form đăng nhập
-            closeLogin();
-            // Cập nhật UI để hiển thị tên người dùng và loại premium
-            updateUserUI(data.username, data.premium_id);
+            // Redirect or update UI as needed
+            // For example: window.location.href = "/dashboard";
+        } else if (data.message === "Incorrect password") {
+            alert("Login failed: Incorrect password");
+        } else if (data.message === "Account does not exist in the system") {
+            alert("Login failed: Account does not exist in the system");
         } else {
-            alert(data.message);
+            alert("Login failed: " + data.message);
         }
     })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
     });
 }
 
