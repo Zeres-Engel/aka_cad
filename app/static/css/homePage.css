@@ -612,3 +612,24 @@
     cursor: pointer;
     margin-bottom: 10px;
 }
+.formatSVGReturn{
+    width: 16px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.returnToEdit{
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+.openReturn{
+    opacity: 1;
+    visibility: visible;
+    width: 30%;
+    height: 100%;
+}
+.onReturn{
+    opacity: 0;
+    visibility: hidden;
+}

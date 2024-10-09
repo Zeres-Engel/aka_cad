@@ -93,3 +93,15 @@ function openQuestion(ulNo){
     qna[ulNo].classList.add('qnaOpen')
     return;
 }
+function openTutorial(){
+    document.getElementById('homePage').classList.remove('homePageClose')
+    setTimeout(()=>{
+        document.getElementById('homePageHeader').classList.remove('homePageHeaderClose');
+        document.getElementById('supportPage').classList.add('supportPageOpen');
+        const navItem = document.getElementsByClassName('nav-item');
+        for (let index = 0; index < navItem.length-1; index++) {
+            navItem[index].classList.add('onReturn')
+        }
+        navItem[navItem.length-1].classList.add('openReturn')
+    },1000)
+}
