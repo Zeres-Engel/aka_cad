@@ -62,8 +62,65 @@ function resetPage(){
     location.reload()   
 }
 function validateLogin(form){
-    console.log(form);
+    event.preventDefault(); // Prevent form submission
+
+    const email = document.getElementById('email').value;
+    const username = document.getElementById('userName').value;
+    const password = document.getElementById('password').value;
+    const rePassword = document.getElementById('rePass').value;
+
+    // Check if it's a registration
+    if (!document.getElementById('formType').classList.contains('selectRegister')) {
+        // This is a login, we'll handle it later
+        console.log('Login not implemented yet');
+        return false;
+    }
+
+    // Validate registration fields
+    if (!email || !username || !password || !rePassword) {
+        alert('Please fill in all fields');
+        return false;
+    }
+
+    if (password !== rePassword) {
+        alert('Passwords do not match');
+        return false;
+    }
+
+    // Call the registration API
+    registerUser(email, username, password);
+
+    return false; // Prevent form submission
 }
+
+function registerUser(email, username, password) {
+    fetch('/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email,
+            username: username,
+            password: password
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "User registered successfully!") {
+            alert('Registration successful! You can now log in.');
+            // Optionally, switch to login form here
+            changeLogin(1, new Event('click'));
+        } else {
+            alert(data.message || 'Registration failed. Please try again.');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+}
+
 function closeAllExceptTab(type){
     switch (type) {
         case 1:
