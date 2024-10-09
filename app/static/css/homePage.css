@@ -349,7 +349,7 @@
     opacity: 0.5;
     color: rgb(231, 231, 231);
 }
-#sumbitLogin {
+#submitLogin {
     all: unset;
     position: absolute;
     bottom: 5%;
@@ -362,7 +362,7 @@
     cursor: pointer;
     transition: 1s ease;
 }
-#sumbitLogin:hover {
+#submitLogin:hover {
     background-color: rgba(182, 181, 181, 0.515);
 }
 .responsiveLoginButton{
