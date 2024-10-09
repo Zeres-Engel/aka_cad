@@ -1,7 +1,7 @@
  function login(){
     const loginFormDOM = document.getElementById('loginFormContainer');
     closeLandingContent()
-    setTimeout(()=>{loginFormDOM.classList.add('loginFormPopUp');},2000)
+    setTimeout(()=>{loginFormDOM.classList.add('loginFormPopUp');},1000)
     const loginButton = document.getElementsByClassName('loginButton');
     loginButton[0].classList.add('responsiveLoginButton')
 }
@@ -9,7 +9,7 @@ function closeHomePage(){
     closeLandingContent()
     document.getElementById('loginFormContainer').classList.add('loginFormClose')
     document.getElementById('homePageHeader').classList.add('homePageHeaderClose')
-    setTimeout(()=>{document.getElementById('homePage').classList.add('homePageClose')},3500)
+    setTimeout(()=>{document.getElementById('homePage').classList.add('homePageClose')},1500)
 }
 function closeLandingContent(){
     document.getElementById('homePageContent').classList.add('homePageContentCloseContent')
