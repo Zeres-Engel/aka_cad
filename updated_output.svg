@@ -1,30 +1,25 @@
-<svg width="375" height="374.9999910000001" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" version="1.0" xmlns="http://www.w3.org/2000/svg">
- <defs>
-  <g id="svg_1" />
-  <clipPath id="c5120d0c95">
-   <path d="m264.54297,234.64453l59.82031,0l0,59.81641l-59.82031,0l0,-59.81641zm0,0" clip-rule="nonzero" id="svg_2" />
-  </clipPath>
-  <clipPath id="f1e95af80e">
-   <path d="m294.45313,234.64453c-16.51954,0 -29.91016,13.39063 -29.91016,29.91016c0,16.51562 13.39062,29.90625 29.91016,29.90625c16.51953,0 29.91015,-13.39063 29.91015,-29.90625c0,-16.51953 -13.39062,-29.91016 -29.91015,-29.91016zm0,0" clip-rule="nonzero" id="svg_3" />
-  </clipPath>
-  <clipPath id="114846224">
-   <path d="m26.66406,33.89063l100.13282,0l0,100.13281l-100.13282,0l0,-100.13281zm0,0" clip-rule="nonzero" id="svg_4" />
-  </clipPath>
-  <clipPath id="c10d316b5f">
-   <path d="m76.73047,33.89063c-27.65234,0 -50.06641,22.41406 -50.06641,50.0664c0,27.65235 22.41407,50.06641 50.06641,50.06641c27.65234,0 50.06641,-22.41406 50.06641,-50.06641c0,-27.65234 -22.41407,-50.0664 -50.06641,-50.0664zm0,0" clip-rule="nonzero" id="svg_5" />
-  </clipPath>
-  <clipPath id="322450f192">
-   <path d="m281.82031,251.91797l25.26563,0l0,25.26953l-25.26563,0l0,-25.26953zm0,0" clip-rule="nonzero" id="svg_6" />
-  </clipPath>
-  <clipPath id="ca3b3952a4">
-   <path d="m294.45313,251.91797c-6.97657,0 -12.63282,5.65625 -12.63282,12.63672c0,6.97656 5.65625,12.63281 12.63282,12.63281c6.97656,0 12.63281,-5.65625 12.63281,-12.63281c0,-6.98047 -5.65625,-12.63672 -12.63281,-12.63672zm0,0" clip-rule="nonzero" id="svg_7" />
-  </clipPath>
- </defs>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
  <g>
   <title>Layer 1</title>
-  <path id="svg_8" d="m27.85749,175.44471l0.38197,0l0.11803,-0.38197l0.11803,0.38197l0.38197,0l-0.30902,0.23607l0.11804,0.38197l-0.30902,-0.23607l-0.30902,0.23607l0.11804,-0.38197l-0.30902,-0.23607z" stroke="#000" fill="#fff" />
-  <rect objects="0" area="0.00" target="bin" padding="0" machine="1" id="svg_9" height="160" width="209" y="49.9" x="36.49999" stroke="#000" fill="#fff" />
-  <rect id="svg_10" height="1" width="1" y="-65.1" x="128.49999" stroke="#000" fill="#fff" />
-  <path fill="#fff" stroke="#000" d="m180.59747,34.13585l27.11978,0l8.38022,-10.31311l8.38023,10.31311l27.11978,0l-21.94032,6.37378l8.38066,10.31311l-21.94033,-6.37395l-21.94033,6.37395l8.38066,-10.31311l-21.94033,-6.37378l-0.00002,0z" id="svg_11" />
+  <rect objects="8" area="0.90" target="bin" padding="0" machine="1" id="svg_1" height="369.99999" width="367.99999" y="93.6" x="13.99999" stroke="#000" fill="#fff" />
+  <rect id="svg_2" height="50" width="46" y="135.6" x="503.99999" stroke="#000" fill="#fff" />
+  <rect id="svg_3" height="160" width="66" y="285.6" x="306.99999" stroke="#000" fill="#fff" transform="rotate(0.0 339.99999 365.6)" />
+  <rect id="svg_4" height="131" width="105" y="306.6" x="28.99999" stroke="#000" fill="#fff" transform="rotate(90.0 81.49999 372.1)" />
+  <rect id="svg_5" height="60" width="91" y="336.6" x="631.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_6" height="100" width="104" y="453.59999" x="625.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_7" height="120" width="65" y="429.6" x="501.99999" stroke="#000" fill="#fff" />
+  <rect id="svg_8" height="87" width="36" y="71.1" x="299.49999" stroke="#000" fill="#fff" transform="rotate(90.0 317.49999 114.6)" />
+  <rect id="svg_9" height="35" width="63" y="424.6" x="83.99999" stroke="#000" fill="#fff" transform="rotate(0.0 115.49999 442.1)" />
+  <rect id="svg_10" height="91" width="125" y="368.6" x="529.99999" stroke="#000" fill="#fff" />
+  <rect id="svg_11" height="131" width="80" y="253.6" x="606.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_12" height="94" width="98" y="118.6" x="611.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_13" height="86" width="147" y="196.6" x="402.99999" stroke="#000" fill="#fff" />
+  <rect id="svg_14" height="105" width="153" y="156.6" x="249.99999" stroke="#000" fill="#fff" transform="rotate(90.0 326.49999 209.1)" />
+  <rect id="svg_15" height="131" width="72" y="18.6" x="643.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_16" height="222" width="124" y="97.6" x="22.99999" stroke="#000" fill="#fff" transform="rotate(0.0 84.99999 208.6)" />
+  <rect id="svg_17" height="133" width="160" y="318.6" x="146.99999" stroke="#000" fill="#fff" transform="rotate(0.0 226.99999 385.1)" />
+  <rect id="svg_18" height="257" width="60" y="141.6" x="659.99998" stroke="#000" fill="#fff" />
+  <rect id="svg_19" height="220" width="127" y="98.6" x="146.99999" stroke="#000" fill="#fff" transform="rotate(0.0 210.49999 208.6)" />
  </g>
+
 </svg>

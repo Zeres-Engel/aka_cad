@@ -16,7 +16,7 @@ class PremiumManager:
         self.collection.insert_many(premium_types)
 
     def get_premium_type(self, premium_id):
-        return self.collection.find_one({"premium_id": premium_id})
+        return self.collection.find_one({"premium_id": int(premium_id)})
 
     def get_all_premium_types(self):
         return list(self.collection.find())
