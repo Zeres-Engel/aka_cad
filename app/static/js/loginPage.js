@@ -1,18 +1,30 @@
  function login(){
     const loginFormDOM = document.getElementById('loginFormContainer');
     closeLandingContent()
-    setTimeout(()=>{loginFormDOM.classList.add('loginFormPopUp');},1000)
+    closeSupport()
+
+    setTimeout(()=>{
+        loginFormDOM.classList.remove('loginFormClose')
+        loginFormDOM.classList.add('loginFormPopUp');
+    },1000)
     const loginButton = document.getElementsByClassName('loginButton');
     loginButton[0].classList.add('responsiveLoginButton')
 }
 function closeHomePage(){
     closeLandingContent()
-    document.getElementById('loginFormContainer').classList.add('loginFormClose')
+    closeLogin()
+    closeSupport()
     document.getElementById('homePageHeader').classList.add('homePageHeaderClose')
     setTimeout(()=>{document.getElementById('homePage').classList.add('homePageClose')},1500)
 }
 function closeLandingContent(){
     document.getElementById('homePageContent').classList.add('homePageContentCloseContent')
+}
+function closeLogin(){
+    document.getElementById('loginFormContainer').classList.add('loginFormClose')
+}
+function closeSupport(){
+    document.getElementById('supportPage').classList.remove('supportPageOpen')
 }
 function changeLogin(isLogin,event){
     event.preventDefault()
@@ -52,4 +64,32 @@ function resetPage(){
 function validateLogin(form){
     console.log(form);
 }
-
+function closeAllExceptTab(type){
+    switch (type) {
+        case 1:
+            closeHomePage()
+            break;
+        case 2:
+            login()
+            break;
+        case 3:
+            closeLandingContent()
+            closeLogin()
+            setTimeout(()=>{document.getElementById('supportPage').classList.add('supportPageOpen')},1000)
+            break;
+        default:
+            break;
+    }
+}
+function openQuestion(ulNo){
+    questionIcon = document.getElementsByClassName('questionIcon')
+    qna = document.getElementsByClassName('qna')
+    if (questionIcon[ulNo].classList.contains('rotateSVG')) {
+        questionIcon[ulNo].classList.remove('rotateSVG')
+        qna[ulNo].classList.remove('qnaOpen')
+        return;
+    }
+    questionIcon[ulNo].classList.add('rotateSVG')
+    qna[ulNo].classList.add('qnaOpen')
+    return;
+}
