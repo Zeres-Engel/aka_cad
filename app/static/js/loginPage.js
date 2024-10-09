@@ -296,6 +296,8 @@ function paymentRequest(amount) {
     body: JSON.stringify({
       user_id: userId, // Truyền user_id của người dùng
       amount: amount, // Giá tiền gói dịch vụ
+      user_id: userId,
+      amount: amount,
     }),
   })
     .then(response => response.json())
