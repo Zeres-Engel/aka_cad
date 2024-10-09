@@ -115,6 +115,19 @@ function handleLogin(event) {
     });
 }
 
+function handleLogout() {
+    console.log("Logout function called");
+
+    // Xóa các thông tin lưu trữ trong localStorage
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.removeItem('premium_id');
+
+    // Chuyển hướng về trang chủ
+    window.location.href = "/";
+}
+
 function loadSVGContent(svgContent) {
     if (svgCanvas && typeof svgCanvas.setSvgString === 'function') {
         svgCanvas.setSvgString(svgContent);
