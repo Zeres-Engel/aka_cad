@@ -37,11 +37,13 @@ def login():
     user = db_manager.user_manager.authenticate_user(username_or_email, password)
 
     if user:
+        svg_content = db_manager.svg_manager.get_svg_content(str(user['_id']))
         return jsonify({
             "message": "Login successful",
             "user_id": str(user['_id']),
             "username": user['username'],
-            "premium_id": user['premium_id']
+            "premium_id": user['premium_id'],
+            "svg_content": svg_content
         }), 200
     else:
         user_exists = db_manager.user_manager.user_exists(username_or_email)

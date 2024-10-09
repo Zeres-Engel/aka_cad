@@ -79,12 +79,12 @@ function handleLogin(event) {
     fetch("/login", {
         method: "POST",
         headers: {
-      "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             username_or_email: username,
-      password: password,
-    }),
+            password: password,
+        }),
     })
     .then(response => response.json())
     .then(data => {
@@ -92,11 +92,14 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
-            localStorage.setItem('isPremium', data.isPremium);
-            updateUserUI(data.username, data.isPremium)
+            localStorage.setItem('isPremium', data.premium_id);
+            updateUserUI(data.username, data.premium_id);
+            
+            if (data.svg_content) {
+                loadSVGContent(data.svg_content);
+            }
+            
             closeHomePage();
-            // Redirect or update UI as needed
-            // For example: window.location.href = "/dashboard";
         } else if (data.message === "Incorrect password") {
             alert("Login failed: Incorrect password");
         } else if (data.message === "Account does not exist in the system") {
@@ -109,6 +112,14 @@ function handleLogin(event) {
         console.error("Error:", error);
         alert("An error occurred. Please try again.");
     });
+}
+
+function loadSVGContent(svgContent) {
+    if (svgCanvas && typeof svgCanvas.setSvgString === 'function') {
+        svgCanvas.setSvgString(svgContent);
+    } else {
+        console.error("svgCanvas or setSvgString method is not available");
+    }
 }
 
 function handleRegister(event) {
