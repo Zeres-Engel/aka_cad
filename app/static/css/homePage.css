@@ -692,3 +692,9 @@
 .paymentContainer li{
     padding-bottom: 5px;
 }
+.isFree {
+    pointer-events: none !important;
+ }
+ .isFree:hover{
+    cursor:no-drop;
+ }

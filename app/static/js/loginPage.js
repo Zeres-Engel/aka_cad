@@ -1,3 +1,6 @@
+function freeAccount(){
+
+}
 function login(){
     const loginFormDOM = document.getElementById('loginFormContainer');
     closeLandingContent()
@@ -9,6 +12,7 @@ function login(){
     },1000)
     const loginButton = document.getElementsByClassName('loginButton');
     loginButton[0].classList.add('responsiveLoginButton')
+    changeLogin(1,null)
 }
 function closeHomePage(){
     closeLandingContent()
@@ -27,7 +31,7 @@ function closeSupport(){
     document.getElementById('supportPage').classList.remove('supportPageOpen')
 }
 function changeLogin(isLogin,event){
-    event.preventDefault()
+    if(event) event.preventDefault();
     const effectLoginType = document.getElementById('formType')
     const loginForm = document.getElementById('loginForm')
     const loginFormFields = document.getElementsByClassName('loginFormField')
@@ -84,6 +88,8 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
+            localStorage.setItem('isPremium', data.isPremium);
+            closeHomePage();
             // Redirect or update UI as needed
             // For example: window.location.href = "/dashboard";
         } else if (data.message === "Incorrect password") {
