@@ -47,13 +47,13 @@ function changeLogin(isLogin, event) {
     loginForm.style.height = "75%";
     if (!loginButton[1].classList.contains("responsiveLoginButton")) {
       loginButton[1].classList.add("responsiveLoginButton");
-    }
+        }
     loginButton[0].classList.remove("responsiveLoginButton");
-    for (let index = 0; index < loginFormFields.length; index++) {
+        for (let index = 0; index < loginFormFields.length; index++) {
       loginFormFields[index].classList.remove("hiddenLoginField");
-    }
-    loginForm.onsubmit = handleRegister;
-  } else {
+        }
+        loginForm.onsubmit = handleRegister;
+    } else {
     effectLoginType.classList.remove("selectRegister");
     effectLoginType.classList.remove("formTypeRegister");
     loginForm.style.width = "50%";
@@ -62,30 +62,30 @@ function changeLogin(isLogin, event) {
     loginButton[1].classList.remove("responsiveLoginButton");
     loginFormFields[0].classList.add("hiddenLoginField");
     loginFormFields[3].classList.add("hiddenLoginField");
-    loginForm.onsubmit = handleLogin;
-  }
+        loginForm.onsubmit = handleLogin;
+    }
 }
 
 function handleLogin(event) {
-  event.preventDefault();
-  const username = document.getElementById("userName").value;
-  const password = document.getElementById("password").value;
+    event.preventDefault();
+    const username = document.getElementById("userName").value;
+    const password = document.getElementById("password").value;
 
-  if (!username || !password) {
-    alert("Please fill in all fields");
-    return;
-  }
+    if (!username || !password) {
+        alert("Please fill in all fields");
+        return;
+    }
 
-  fetch("/login", {
-    method: "POST",
-    headers: {
+    fetch("/login", {
+        method: "POST",
+        headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username_or_email: username,
+        },
+        body: JSON.stringify({
+            username_or_email: username,
       password: password,
     }),
-  })
+    })
     .then(response => response.json())
     .then(data => {
         if (data.message === "Login successful") {
@@ -93,6 +93,7 @@ function handleLogin(event) {
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
             localStorage.setItem('isPremium', data.isPremium);
+            updateUserUI(data.username, data.isPremium)
             closeHomePage();
             // Redirect or update UI as needed
             // For example: window.location.href = "/dashboard";
@@ -105,48 +106,48 @@ function handleLogin(event) {
         }
     })
     .catch(error => {
-      console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
     });
 }
 
 function handleRegister(event) {
-  event.preventDefault();
+    event.preventDefault();
   const email = document.getElementById("email").value;
   const username = document.getElementById("userName").value;
   const password = document.getElementById("password").value;
   const rePassword = document.getElementById("rePass").value;
 
-  if (!email || !username || !password || !rePassword) {
+    if (!email || !username || !password || !rePassword) {
     alert("Please fill in all fields");
-    return;
-  }
+        return;
+    }
 
-  if (password !== rePassword) {
+    if (password !== rePassword) {
     alert("Passwords do not match");
-    return;
-  }
+        return;
+    }
 
   fetch("/register", {
     method: "POST",
-    headers: {
+        headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      username: username,
+        },
+        body: JSON.stringify({
+            email: email,
+            username: username,
       password: password,
-    }),
-  })
+        }),
+    })
     .then(response => response.json())
     .then(data => {
-      if (data.message === "User registered successfully!") {
+        if (data.message === "User registered successfully!") {
         alert("Registration successful! You can now log in.");
-        // Optionally, switch to login form here
+            // Optionally, switch to login form here
         changeLogin(1, new Event("click"));
-      } else {
+        } else {
         alert(data.message || "Registration failed. Please try again.");
-      }
+        }
     })
     .catch(error => {
       console.error("Error:", error);
@@ -158,60 +159,60 @@ function resetPage() {
   location.reload();
 }
 function validateLogin(form) {
-  event.preventDefault(); // Prevent form submission
+    event.preventDefault(); // Prevent form submission
 
   const email = document.getElementById("email").value;
   const username = document.getElementById("userName").value;
   const password = document.getElementById("password").value;
   const rePassword = document.getElementById("rePass").value;
 
-  // Check if it's a registration
+    // Check if it's a registration
   if (
     !document.getElementById("formType").classList.contains("selectRegister")
   ) {
-    // This is a login, we'll handle it later
+        // This is a login, we'll handle it later
     console.log("Login not implemented yet");
-    return false;
-  }
+        return false;
+    }
 
-  // Validate registration fields
-  if (!email || !username || !password || !rePassword) {
+    // Validate registration fields
+    if (!email || !username || !password || !rePassword) {
     alert("Please fill in all fields");
-    return false;
-  }
+        return false;
+    }
 
-  if (password !== rePassword) {
+    if (password !== rePassword) {
     alert("Passwords do not match");
-    return false;
-  }
+        return false;
+    }
 
-  // Call the registration API
-  registerUser(email, username, password);
+    // Call the registration API
+    registerUser(email, username, password);
 
-  return false; // Prevent form submission
+    return false; // Prevent form submission
 }
 
 function registerUser(email, username, password) {
   fetch("/register", {
     method: "POST",
-    headers: {
+        headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      username: username,
+        },
+        body: JSON.stringify({
+            email: email,
+            username: username,
       password: password,
-    }),
-  })
+        }),
+    })
     .then(response => response.json())
     .then(data => {
-      if (data.message === "User registered successfully!") {
+        if (data.message === "User registered successfully!") {
         alert("Registration successful! You can now log in.");
-        // Optionally, switch to login form here
+            // Optionally, switch to login form here
         changeLogin(1, new Event("click"));
-      } else {
+        } else {
         alert(data.message || "Registration failed. Please try again.");
-      }
+        }
     })
     .catch(error => {
       console.error("Error:", error);
@@ -220,23 +221,23 @@ function registerUser(email, username, password) {
 }
 
 function closeAllExceptTab(type) {
-  switch (type) {
-    case 1:
+    switch (type) {
+        case 1:
       closeHomePage();
-      break;
-    case 2:
+            break;
+        case 2:
       login();
-      break;
-    case 3:
+            break;
+        case 3:
       closeLandingContent();
       closeLogin();
       setTimeout(() => {
         document.getElementById("supportPage").classList.add("supportPageOpen");
       }, 1000);
-      break;
-    default:
-      break;
-  }
+            break;
+        default:
+            break;
+    }
 }
 function openQuestion(ulNo) {
   questionIcon = document.getElementsByClassName("questionIcon");
@@ -248,8 +249,8 @@ function openQuestion(ulNo) {
   }
   questionIcon[ulNo].classList.add("rotateSVG");
   qna[ulNo].classList.add("qnaOpen");
-  return;
-}
+        return;
+    }
 function openTutorial(type = 0) {
   const isPremium = Number(localStorage.getItem('isPremium'));
   if (![1,2,3,4].includes(isPremium) && type === 1) {
@@ -284,7 +285,7 @@ function paymentRequest(amount) {
     alert("Bạn cần đăng nhập trước khi thực hiện thanh toán.");
     window.location.href = "/"; // Giả định đường dẫn đến trang đăng nhập là '/login'
     return;
-  }
+}
 
   // Gửi yêu cầu thanh toán tới server
   fetch("/payment/create", {
@@ -311,14 +312,12 @@ function paymentRequest(amount) {
       alert("Lỗi trong quá trình xử lý thanh toán. Vui lòng thử lại.");
     });
 }
-function updateUserUI(username, isPremium) {
-  // Cập nhật UI để hiển thị tên người dùng và loại premium
-  // Ví dụ:
-  const userInfoElement = document.getElementById("userInfo");
-  if (userInfoElement) {
-    userInfoElement.textContent = `Welcome, ${username} (Premium: ${isPremium})`;
-  }
+
+function updateUserUI(username, premium_id) {
+    const userInfoDiv = document.getElementById('user_info');
+    userInfoDiv.textContent = `User: ${username} | Premium: ${premium_id}`;
 }
+
 function showPremiumNeedNesting(){
     const isPremium = Number(localStorage.getItem('isPremium'));
     if (![1,2,3,4].includes(isPremium)) {
@@ -329,5 +328,5 @@ function showPremiumNeedNesting(){
   function closeTooltip(){
     document.getElementById('tooltip').classList.remove('tooltipShow')
     return;
-  }
+}
   localStorage.clear();
