@@ -330,9 +330,6 @@ function paymentRequest(amount) {
     });
 }
 
-function updateUserUI(username, premium_id) {
-    const userInfoDiv = document.getElementById('user_info');
-    userInfoDiv.textContent = `User: ${username} | Premium: ${premium_id}`;
 function updateUserUI(username, email, premium_id) {
     // Lấy phần tử HTML để hiển thị thông tin người dùng
     const userInfoDisplay = document.getElementById('user_info_display');
