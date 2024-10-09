@@ -383,8 +383,8 @@
     top: 3%;
     transition: 1s ease;
     overflow-y: scroll ;
-    /* opacity: 0;
-    visibility: hidden; */
+    opacity: 0;
+    visibility: hidden;
 }
 .supportPageOpen{
     opacity: 1;
@@ -534,7 +534,6 @@
     font-size: 2rem;
 }
 .questionItem{
-    /* background-color: green; */
     padding: 0px 20px 0px 0px;
     margin-bottom: 10px;
     font-size: 1.5 rem;
