@@ -1,4 +1,4 @@
- function login(){
+function login(){
     const loginFormDOM = document.getElementById('loginFormContainer');
     closeLandingContent()
     closeSupport()
@@ -44,49 +44,28 @@ function changeLogin(isLogin,event){
         for (let index = 0; index < loginFormFields.length; index++) {
             loginFormFields[index].classList.remove('hiddenLoginField')
         }
-        return;
-    }
-    if (!loginButton[0].classList.contains('responsiveLoginButton')) {
+        loginForm.onsubmit = handleRegister;
+    } else {
+        effectLoginType.classList.remove('selectRegister')
+        effectLoginType.classList.remove('formTypeRegister')
+        loginForm.style.width='50%'
+        loginForm.style.height='70%'
         loginButton[0].classList.add('responsiveLoginButton')
+        loginButton[1].classList.remove('responsiveLoginButton')
+        loginFormFields[0].classList.add('hiddenLoginField')
+        loginFormFields[3].classList.add('hiddenLoginField')
+        loginForm.onsubmit = handleLogin;
     }
-    loginButton[1].classList.remove('responsiveLoginButton')
-    for (let index = 0; index < loginFormFields.length; index++) {
-        if(index === 0 || index === 3)
-        loginFormFields[index].classList.add('hiddenLoginField')
-    }
-    loginForm.style.width='50%'
-    loginForm.style.height='70%'
-    effectLoginType.classList.remove('selectRegister')
 }
-function resetPage(){
-    location.reload()   
-}
-function changeLogin(type, event) {
+
+function handleLogin(event) {
     event.preventDefault();
-    const formTypeElement = document.getElementById("formType");
-    const emailField = document.querySelector(".hiddenLoginField:first-child");
-    const rePassField = document.querySelector(".hiddenLoginField:last-child");
-
-    if (type === 1) {
-        formTypeElement.textContent = "Login";
-        emailField.style.display = "none";
-        rePassField.style.display = "none";
-        document.getElementById('loginForm').onsubmit = validateLogin;
-    } else if (type === 2) {
-        formTypeElement.textContent = "Register";
-        emailField.style.display = "block";
-        rePassField.style.display = "block";
-        document.getElementById('loginForm').onsubmit = validateRegister;
-    }
-}
-
-function validateLogin(form) {
     const username = document.getElementById("userName").value;
     const password = document.getElementById("password").value;
 
-    if (username === "" || password === "") {
+    if (!username || !password) {
         alert("Please fill in all fields");
-        return false;
+        return;
     }
 
     fetch("/login", {
@@ -95,65 +74,79 @@ function validateLogin(form) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            username: username,
+            username_or_email: username,
             password: password
         })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.message === "Login successful") {
             alert("Login successful");
-            window.location.href = "/dashboard"; // Điều hướng tới dashboard sau khi login thành công
+            localStorage.setItem('user_id', data.user_id);
+            localStorage.setItem('username', data.username);
+            // Redirect or update UI as needed
+            // For example: window.location.href = "/dashboard";
+        } else if (data.message === "Incorrect password") {
+            alert("Login failed: Incorrect password");
+        } else if (data.message === "Account does not exist in the system") {
+            alert("Login failed: Account does not exist in the system");
         } else {
             alert("Login failed: " + data.message);
         }
     })
-    .catch(error => console.error("Error:", error));
-
-    return false; // Ngăn form submit mặc định
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    });
 }
 
-function validateRegister(form) {
-    const email = document.getElementById("email").value;
-    const username = document.getElementById("userName").value;
-    const password = document.getElementById("password").value;
-    const rePass = document.getElementById("rePass").value;
+function handleRegister(event) {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const username = document.getElementById('userName').value;
+    const password = document.getElementById('password').value;
+    const rePassword = document.getElementById('rePass').value;
 
-    if (email === "" || username === "" || password === "" || rePass === "") {
-        alert("Please fill in all fields");
-        return false;
+    if (!email || !username || !password || !rePassword) {
+        alert('Please fill in all fields');
+        return;
     }
 
-    if (password !== rePass) {
-        alert("Passwords do not match");
-        return false;
+    if (password !== rePassword) {
+        alert('Passwords do not match');
+        return;
     }
 
-    fetch("/register", {
-        method: "POST",
+    fetch('/register', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             email: email,
             username: username,
             password: password
-        })
+        }),
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            alert("Registration successful");
-            window.location.href = "/login"; // Điều hướng về login sau khi đăng ký thành công
+        if (data.message === "User registered successfully!") {
+            alert('Registration successful! You can now log in.');
+            // Optionally, switch to login form here
+            changeLogin(1, new Event('click'));
         } else {
-            alert("Registration failed: " + data.message);
+            alert(data.message || 'Registration failed. Please try again.');
         }
     })
-    .catch(error => console.error("Error:", error));
-
-    return false; // Ngăn form submit mặc định
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
 }
 
+function resetPage(){
+    location.reload()   
+}
 function validateLogin(form){
     event.preventDefault(); // Prevent form submission
 
@@ -254,4 +247,7 @@ function openTutorial(){
         }
         navItem[navItem.length-1].classList.add('openReturn')
     },1000)
+}
+function paymentRequest(price) {
+    
 }

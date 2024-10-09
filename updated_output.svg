@@ -1,21 +1,17 @@
 <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
  <g>
   <title>Layer 1</title>
-  <rect objects="11" area="0.89" target="bin" padding="0" machine="1" id="svg_1" height="245" width="313" y="118.99999" x="79.59999" stroke="#000" fill="#fff" />
-  <rect id="svg_2" height="27" width="25" y="141.99999" x="81.59999" stroke="#000" fill="#fff" transform="rotate(0.0 94.09999 155.49999)" />
-  <rect id="svg_3" height="62" width="38" y="118.99999" x="118.59999" stroke="#000" fill="#fff" transform="rotate(90.0 137.59999 149.99999)" />
-  <rect id="svg_4" height="89" width="80" y="267.99999" x="281.59999" stroke="#000" fill="#fff" transform="rotate(0.0 321.59999 312.49999)" />
-  <rect id="svg_5" height="78" width="86" y="278.49999" x="81.59999" stroke="#000" fill="#fff" transform="rotate(0.0 124.59999 317.49999)" />
-  <rect id="svg_6" height="65" width="77" y="105.99999" x="644.59998" stroke="#000" fill="#fff" />
-  <rect id="svg_7" height="106" width="113" y="171.99999" x="168.59999" stroke="#000" fill="#fff" transform="rotate(0.0 225.09999 224.99999)" />
-  <rect id="svg_8" height="82" width="114" y="277.99999" x="167.59999" stroke="#000" fill="#fff" transform="rotate(0.0 224.59999 318.99999)" />
-  <rect id="svg_9" height="86" width="84" y="181.99999" x="281.59999" stroke="#000" fill="#fff" transform="rotate(0.0 323.59999 224.99999)" />
-  <rect id="svg_10" height="58" width="57" y="343.99999" x="733.59998" stroke="#000" fill="#fff" />
-  <rect id="svg_11" height="136" width="49" y="79.49999" x="212.09999" stroke="#000" fill="#fff" transform="rotate(90.0 236.59999 147.49999)" />
-  <rect id="svg_12" height="60" width="36" y="370.99999" x="599.59998" stroke="#000" fill="#fff" />
-  <rect id="svg_13" height="23" width="124" y="232.49999" x="315.09999" stroke="#000" fill="#fff" transform="rotate(90.0 377.09999 243.99999)" />
-  <rect id="svg_14" height="59" width="86" y="122.99999" x="304.59999" stroke="#000" fill="#fff" transform="rotate(0.0 347.59999 152.49999)" />
-  <rect id="svg_15" height="72" width="109" y="187.49999" x="78.09999" stroke="#000" fill="#fff" transform="rotate(90.0 132.59999 223.49999)" />
+  <rect fill="#fff" stroke="#000" x="531.59998" y="151.99999" width="38" height="62" id="svg_3" />
+  <rect fill="#fff" stroke="#000" x="528.59998" y="278.99999" width="80" height="89" id="svg_4" />
+  <rect fill="#fff" stroke="#000" x="640.59998" y="229.99999" width="86" height="78" id="svg_5" />
+  <rect fill="#fff" stroke="#000" x="644.59998" y="105.99999" width="77" height="65" id="svg_6" />
+  <rect objects="1" area="0.66" target="bin" padding="0" machine="1" fill="#fff" stroke="#000" x="127.59998" y="175.99999" width="113" height="106" id="svg_7" />
+  <rect fill="#fff" stroke="#000" x="628.59998" y="389.99999" width="84" height="86" id="svg_9" />
+  <rect fill="#fff" stroke="#000" x="733.59998" y="343.99999" width="57" height="58" id="svg_10" />
+  <rect fill="#fff" stroke="#000" x="708.59998" y="271.99999" width="49" height="136" id="svg_11" />
+  <rect fill="#fff" stroke="#000" x="599.59998" y="370.99999" width="36" height="60" id="svg_12" />
+  <rect fill="#fff" stroke="#000" x="573.59998" y="504.99999" width="86" height="59" id="svg_14" />
+  <rect fill="#fff" stroke="#000" x="129.59998" y="192.99999" width="109" height="72" id="svg_15" transform="rotate(0.0 184.09998 228.99999)" />
  </g>
 
 </svg>

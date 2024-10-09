@@ -24,22 +24,30 @@ def nest():
 
     return jsonify({'new_svg_content': new_svg_content})
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        data = request.get_json()
-        username_or_email = data.get('username_or_email')
-        password = data.get('password')
+    data = request.get_json()
+    username_or_email = data.get('username_or_email')
+    password = data.get('password')
 
-        if not username_or_email or not password:
-            return jsonify({"message": "Missing required fields"}), 400
+    if not username_or_email or not password:
+        return jsonify({"message": "Missing required fields"}), 400
 
-        user = db_manager.user_manager.authenticate_user(username_or_email, password)
+    user = db_manager.user_manager.authenticate_user(username_or_email, password)
 
-        if user:
-            return jsonify({"message": "Login successful", "user_id": str(user['_id'])}), 200
+    if user:
+        return jsonify({
+            "message": "Login successful",
+            "user_id": str(user['_id']),
+            "username": user['username']
+        }), 200
+    else:
+        # Kiểm tra xem tài khoản có tồn tại không
+        user_exists = db_manager.user_manager.user_exists(username_or_email)
+        if user_exists:
+            return jsonify({"message": "Incorrect password"}), 401
         else:
-            return jsonify({"message": "Invalid credentials"}), 401
+            return jsonify({"message": "Account does not exist in the system"}), 404
 
 @app.route('/register', methods=['POST'])
 def register():
