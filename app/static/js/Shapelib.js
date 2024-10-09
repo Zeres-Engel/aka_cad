@@ -5,7 +5,7 @@ MD.Shapelib = function(){
   var start_x, start_y;
   var svgroot = canv.getRootElem();
   var lastBBox = {};
-
+  var isPremiumArr = ['nature','game','dialog_balloon','music','weather','ui','social']
   $(document).on("mousedown", function(e){
     if (!e.target.closest("#tools_shapelib"))
       $("#tools_shapelib").hide();
@@ -72,9 +72,13 @@ MD.Shapelib = function(){
   }
   
   function loadLibrary(cat_id) {
-  
-    var lib = library[cat_id];
     
+    var lib = library[cat_id];
+    const isPremium = Number(localStorage.getItem('isPremium'));
+    if (![1,2,3,4].includes(isPremium) && isPremiumArr.includes(cat_id)) {
+      showPremiumNeed()
+      return;
+    }
     if(!lib) {
       $('#shape_buttons').html('Loading...');
       $.getJSON('/static/js/shapelib/' + cat_id + '.json', function(result, textStatus) {
@@ -144,11 +148,6 @@ MD.Shapelib = function(){
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
         var btn = $(evt.target).closest('div.tool_button');
-        const isPremium = Number(localStorage.getItem('isPremium'));
-        if (![1,2,3,4].includes(isPremium)) {
-          showPremiumNeed()
-          return;
-        }
         if(!btn.length) return;
         
         var copy = btn.children().clone().attr({width: 24, height: 24});
