@@ -92,6 +92,7 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
+<<<<<<< HEAD
             localStorage.setItem('isPremium', data.premium_id);
             updateUserUI(data.username, data.premium_id);
             
@@ -99,6 +100,11 @@ function handleLogin(event) {
                 loadSVGContent(data.svg_content);
             }
             
+=======
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('isPremium', data.isPremium);
+            updateUserUI(data.username, data.email, data.isPremium);
+>>>>>>> 629e4dfeec97ce575b1d73497d0a6df1cd1cf719
             closeHomePage();
         } else if (data.message === "Incorrect password") {
             alert("Login failed: Incorrect password");
@@ -327,7 +333,25 @@ function paymentRequest(amount) {
 function updateUserUI(username, premium_id) {
     const userInfoDiv = document.getElementById('user_info');
     userInfoDiv.textContent = `User: ${username} | Premium: ${premium_id}`;
+function updateUserUI(username, email, premium_id) {
+    // Lấy phần tử HTML để hiển thị thông tin người dùng
+    const userInfoDisplay = document.getElementById('user_info_display');
+    userInfoDisplay.innerHTML = `
+        <strong>Username:</strong> ${username} <br>
+        <strong>Email:</strong> ${email} <br>
+        <strong>Premium ID:</strong> ${premium_id}
+    `;
 }
+
+// Tự động tải thông tin người dùng nếu đã có trong localStorage (ví dụ: khi tải lại trang)
+window.onload = function() {
+    const savedUsername = localStorage.getItem('username');
+    const savedEmail = localStorage.getItem('email');
+    const savedPremiumId = localStorage.getItem('premium_id');
+    if (savedUsername && savedEmail && savedPremiumId) {
+        updateUserUI(savedUsername, savedEmail, savedPremiumId);
+    }
+};
 
 function showPremiumNeedNesting(){
     const isPremium = Number(localStorage.getItem('isPremium'));
