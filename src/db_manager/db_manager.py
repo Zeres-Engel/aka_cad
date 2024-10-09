@@ -3,6 +3,7 @@ from bson import ObjectId
 from .user_manager import UserManager
 from .svg_manager import SVGeditorManager
 from .payment_manager import PaymentManager
+from .premium_manager import PremiumManager
 
 class DBManager:
     def __init__(self, connection_string):
@@ -11,22 +12,18 @@ class DBManager:
         self.user_manager = UserManager(self.db)
         self.svg_manager = SVGeditorManager(self.db)
         self.payment_manager = PaymentManager(self.db)
+        self.premium_manager = PremiumManager(self.db)
 
-    def close_connection(self):
-        self.client.close()
-        
-    def clear_collection(self):
+    def initialize_database(self):
+        self.clear_all_collections()
+        self.premium_manager.initialize_premium_types()
+        self.user_manager.remove_fullname_field()
+
+    def clear_all_collections(self):
         self.user_manager.clear_collection()
         self.svg_manager.clear_collection()
         self.payment_manager.clear_collection()
+        self.premium_manager.clear_collection()
 
-    def update_user(self, user_id, update_data):
-        result = self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': update_data})
-        return result.modified_count > 0
-    
-    def update_premium_status(self, user_id, is_premium):
-        result = self.collection.update_one(
-            {'_id': ObjectId(user_id)},
-            {'$set': {'is_premium': is_premium}}
-        )
-        return result.modified_count > 0
+    def close_connection(self):
+        self.client.close()

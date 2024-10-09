@@ -18,10 +18,17 @@ class UserManager:
             'username': username,
             'password': generate_password_hash(password),
             'email': email,
-            'is_premium': False
+            'premium_id': 0  # Mặc định là gói Free
         }
         result = self.collection.insert_one(user)
         return str(result.inserted_id), None
+
+    def update_premium_status(self, user_id, premium_id):
+        result = self.collection.update_one(
+            {'_id': ObjectId(user_id)},
+            {'$set': {'premium_id': premium_id}}
+        )
+        return result.modified_count > 0
 
     def get_user(self, user_id):
         return self.collection.find_one({'_id': ObjectId(user_id)})
@@ -44,3 +51,6 @@ class UserManager:
 
     def clear_collection(self):
         self.collection.delete_many({})
+
+    def remove_fullname_field(self):
+        self.collection.update_many({}, {'$unset': {'fullname': ''}})

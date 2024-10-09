@@ -13,7 +13,8 @@ payOS = PayOS(client_id="2515ec70-1017-43cb-8594-8fe2ff84be5d", api_key="4a8f0f9
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Trang chủ
+    premium_types = db_manager.premium_manager.get_all_premium_types()
+    return render_template('index.html', premium_types=premium_types)
 
 @app.route('/nest', methods=['POST'])
 def nest():
@@ -39,10 +40,10 @@ def login():
         return jsonify({
             "message": "Login successful",
             "user_id": str(user['_id']),
-            "username": user['username']
+            "username": user['username'],
+            "premium_id": user['premium_id']
         }), 200
     else:
-        # Kiểm tra xem tài khoản có tồn tại không
         user_exists = db_manager.user_manager.user_exists(username_or_email)
         if user_exists:
             return jsonify({"message": "Incorrect password"}), 401
@@ -54,17 +55,18 @@ def register():
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
-    password = data.get('password') 
+    password = data.get('password')
+    fullname = data.get('fullname')
 
-    if not username or not email or not password:
+    if not username or not email or not password or not fullname:
         return jsonify({"message": "Missing required fields"}), 400
 
-    user_id = db_manager.user_manager.create_user(username, password, email)
+    user_id, error_message = db_manager.user_manager.create_user(username, password, email, fullname)
 
     if user_id:
         return jsonify({"message": "User registered successfully!", "user_id": user_id}), 201
     else:
-        return jsonify({"message": "Username or email already exists"}), 400
+        return jsonify({"message": error_message}), 400
 
 @app.route('/save_svg', methods=['POST'])
 def save_svg():
@@ -89,32 +91,28 @@ def save_svg():
 def create_payment():
     data = request.get_json()
     user_id = data.get('user_id')
-    amount = data.get('amount')
+    premium_id = data.get('premium_id')
 
-    if not user_id or not amount:
+    if not user_id or not premium_id:
         return jsonify({"message": "Missing required fields"}), 400
 
     user = db_manager.user_manager.get_user(user_id)
     if not user:
         return jsonify({"message": "User not found"}), 404
 
-    # Create a payment record in our database
-    payment_id = db_manager.payment_manager.create_payment(user_id, amount, 'PayOS')
+    premium_type = db_manager.premium_manager.get_premium_type(premium_id)
+    if not premium_type:
+        return jsonify({"message": "Invalid premium type"}), 400
 
-    # Create a payment link with PayOS
-    payment_data = PaymentData(
-        orderCode=payment_id,
-        amount=amount,
-        description=f"Premium subscription for user {user_id}",
-        cancelUrl=f"{request.host_url}payment/cancel",
-        returnUrl=f"{request.host_url}payment/success"
-    )
+    payment_id = db_manager.payment_manager.create_payment(user_id, premium_type['price'], 'PayOS')
 
-    try:
-        payos_response = payOS.createPaymentLink(payment_data)
-        return jsonify(payos_response.to_json()), 200
-    except Exception as e:
-        return jsonify({"message": str(e)}), 500
+    db_manager.user_manager.update_premium_status(user_id, premium_id)
+
+    return jsonify({
+        "message": "Payment created successfully",
+        "payment_id": payment_id,
+        "amount": premium_type['price']
+    }), 200
 
 @app.route('/payment/success', methods=['GET'])
 def payment_success():
@@ -144,6 +142,7 @@ def payment_cancel():
     return jsonify({"message": "Payment cancelled"}), 200
 
 if __name__ == '__main__':
+    db_manager.initialize_database()
     try:
         app.run(host='0.0.0.0', port=5000, debug=True)
     finally:
