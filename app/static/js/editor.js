@@ -328,7 +328,8 @@ MD.Editor = function(){
   }
 
   function about(){
-    editor.modal.about.open();
+    // editor.modal.about.open();
+    
   }
 
   function configure(){
