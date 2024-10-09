@@ -88,8 +88,11 @@ function handleLogin(event) {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
+<<<<<<< Updated upstream
             localStorage.setItem('isPremium', data.isPremium);
             closeHomePage();
+=======
+>>>>>>> Stashed changes
             // Redirect or update UI as needed
             // For example: window.location.href = "/dashboard";
         } else if (data.message === "Incorrect password") {
@@ -254,6 +257,7 @@ function openTutorial(){
         navItem[navItem.length-1].classList.add('openReturn')
     },1000)
 }
+<<<<<<< Updated upstream
 function paymentRequest(amount) {
     // Kiểm tra xem người dùng đã đăng nhập chưa
     const userId = localStorage.getItem('user_id'); // Lấy user_id từ localStorage
@@ -290,3 +294,8 @@ function paymentRequest(amount) {
         alert('Lỗi trong quá trình xử lý thanh toán. Vui lòng thử lại.');
     });
 }
+=======
+function paymentRequest(price) {
+    
+}
+>>>>>>> Stashed changes
