@@ -3,9 +3,26 @@
     height: 100vh;
     position: absolute;
     z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.899);
-    color: #66FCF1 !important;
+    /* background-color: rgba(0, 0, 0, 0.899); */
+    background-image: url(https://www.amd.com/content/dam/amd/en/images/backgrounds/abstract/2882196-advancing-ai-background.jpg);
+    background-size: contain;
+    color: #ffffff !important;
     transition: 1s;
+}
+#homePageContent2 {
+    color: #66fcf1 !important;
+}
+.homePage h1 {
+    color: #66fcf1 !important;
+}
+.homePage p {
+    color: #ffffff !important;
+}
+.homePage h2 {
+    color: #ffffff !important;
+}
+.homePage h3 {
+    color: #ffffff !important;
 }
 .homePageClose {
     width: 0;
@@ -13,7 +30,7 @@
     opacity: 0;
 }
 .homePageHeader {
-    background-color: rgba(0, 0, 0, 0.773);
+    background-color: rgb(0, 0, 0);
     box-shadow: 0px 0px 10px white;
     width: 100vw;
     height: 15%;
@@ -95,6 +112,9 @@
     width: 100%;
     height: 85%;
     transition: 1s;
+    background-size: cover;
+    background-position-y: -10%;
+    /* background-color: black; */
 }
 .homePageContentCloseContent {
     opacity: 0;
@@ -250,7 +270,7 @@
     width: 70%;
     height: 85%;
 }
-.loginFormClose{
+.loginFormClose {
     opacity: 0 !important;
     visibility: hidden !important;
 }
@@ -365,10 +385,10 @@
 #submitLogin:hover {
     background-color: rgba(182, 181, 181, 0.515);
 }
-.responsiveLoginButton{
+.responsiveLoginButton {
     background-color: rgba(255, 255, 255, 0.44) !important;
 }
-.supportPage{
+.supportPage {
     background-color: black;
     box-shadow: 0px 0px 15px white;
     backdrop-filter: blur(20px);
@@ -382,11 +402,11 @@
     position: relative;
     top: 3%;
     transition: 1s ease;
-    overflow-y: scroll ;
+    overflow-y: scroll;
     opacity: 0;
     visibility: hidden;
 }
-.supportPageOpen{
+.supportPageOpen {
     opacity: 1;
     visibility: visible;
 }
@@ -479,9 +499,9 @@
         scale: 70%;
     }
 }
-@media only screen and (min-width: 450px){
-    .responsiveLoginButton{
-        background-color: rgba(0, 255, 255, 0) !important; 
+@media only screen and (min-width: 450px) {
+    .responsiveLoginButton {
+        background-color: rgba(0, 255, 255, 0) !important;
     }
 }
 @media only screen and (max-width: 450px) {
@@ -501,39 +521,39 @@
         right: 0;
     }
 }
-.tutorialContainer{
+.tutorialContainer {
     margin-top: 3%;
     width: 90%;
     display: flex;
     justify-content: center;
     align-items: start;
 }
-.tutorialVideo{
+.tutorialVideo {
     width: 49%;
     text-align: center;
 }
-.tutorialVideo:last-of-type{
-    border-left: solid 1px #66FCF1;
+.tutorialVideo:last-of-type {
+    border-left: solid 1px #66fcf1;
 }
-.videoContentList li{
+.videoContentList li {
     text-align: start;
 }
-.questionAnswer{
+.questionAnswer {
     width: 90%;
 }
-.questionList{
+.questionList {
     width: 60%;
 }
-.questionAnswer{
+.questionAnswer {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-.questionAnswer h1{
+.questionAnswer h1 {
     font-size: 2rem;
 }
-.questionItem{
+.questionItem {
     padding: 0px 20px 0px 0px;
     margin-bottom: 10px;
     font-size: 1.5 rem;
@@ -543,51 +563,51 @@
     align-items: start;
     width: 100%;
     cursor: pointer;
-    transition: .5s ease;
+    transition: 0.5s ease;
 }
-.rotateSVG{
+.rotateSVG {
     transform: rotate(180deg);
 }
-.questionIcon{
-    transition: .5s ease;
+.questionIcon {
+    transition: 0.5s ease;
     width: 16px;
 }
-.inProgress{
+.inProgress {
     width: 16px;
 }
-.mainQuestion{
+.mainQuestion {
     padding-right: 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: solid 1px #66FCF1;
-    list-style:inside;
+    border-bottom: solid 1px #66fcf1;
+    list-style: inside;
 }
-.mainQuestion:hover{
+.mainQuestion:hover {
     box-shadow: 0px 0px 15px white;
 }
-.qna{
-    visibility:hidden;
+.qna {
+    visibility: hidden;
     width: 0;
     height: 0;
     opacity: 0;
     display: flex;
     justify-content: start;
     align-items: center;
-    transition: .5 ease;
+    transition: 0.5 ease;
 }
-.qnaOpen{
+.qnaOpen {
     padding-left: 30px;
     width: 100%;
     height: 100%;
     visibility: visible;
     opacity: 1;
 }
-.contactContainer h1{
+.contactContainer h1 {
     font-size: 2rem;
 }
-.contactContainer{
+.contactContainer {
     background-color: black;
     width: 100%;
     display: flex;
@@ -595,46 +615,46 @@
     align-items: center;
     flex-direction: column;
 }
-.contactContent{
+.contactContent {
     width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.contactList{
+.contactList {
     height: 80%;
     display: flex;
     justify-content: center;
     align-self: center;
     flex-direction: column;
-    border-left: 1px solid #66FCF1;
+    border-left: 1px solid #66fcf1;
 }
-.contactItem{
+.contactItem {
     cursor: pointer;
     margin-bottom: 10px;
 }
-.formatSVGReturn{
+.formatSVGReturn {
     width: 16px;
     margin-left: 10px;
     margin-top: 5px;
 }
-.returnToEdit{
+.returnToEdit {
     opacity: 0;
     visibility: hidden;
     width: 0;
     height: 0;
 }
-.openReturn{
+.openReturn {
     opacity: 1;
     visibility: visible;
     width: 30%;
     height: 100%;
 }
-.onReturn{
+.onReturn {
     opacity: 0;
     visibility: hidden;
 }
-.paymentContainer{
+.paymentContainer {
     border-radius: 10px;
     width: 100%;
     display: flex;
@@ -644,12 +664,12 @@
     height: max-content;
     margin-bottom: 10%;
 }
-.paymentContainer h1{
+.paymentContainer h1 {
     margin-bottom: 5%;
     width: 100%;
     text-align: center;
 }
-.paymentItem{
+.paymentItem {
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 0px 0px 15px white;
@@ -661,11 +681,11 @@
     align-items: center;
     transition: 1s ease;
 }
-.paymentItem:hover{
+.paymentItem:hover {
     background-color: rgba(221, 221, 221, 0.221);
     scale: 110%;
 }
-.paymentItem h3{
+.paymentItem h3 {
     width: 100%;
     justify-self: start;
     display: flex;
@@ -674,7 +694,7 @@
     align-items: center;
     line-height: 1.7rem;
 }
-.paymentItem p{
+.paymentItem p {
     width: 100%;
     height: 10%;
     display: flex;
@@ -683,18 +703,81 @@
     font-weight: bold;
     font-size: 2rem;
 }
-.paymentContent{
+.paymentContent {
+    margin-top: 5%;
     height: 60%;
     width: 80%;
     padding: 0;
     margin: 0;
 }
-.paymentContainer li{
+.paymentContainer li {
     padding-bottom: 5px;
 }
 .isFree {
     pointer-events: none !important;
- }
- .isFree:hover{
-    cursor:no-drop;
- }
+}
+.isFree:hover {
+    cursor: no-drop;
+}
+/* Style for the tooltip */
+.tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    backdrop-filter: blur(20px);
+    border: solid 1px white;
+    background-color: black;
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40vh 25vw;
+    width: 50vw;
+    height: 20vh;
+    border-radius: 5px;
+    z-index: 9999;
+    animation: 2s infinite lightentUp;
+    transition: 1s ease;
+    flex-direction: column;
+}
+.tooltipShow{
+    visibility: visible;
+    opacity: 1;
+}
+@keyframes lightentUp {
+    0% {
+        box-shadow: 0px 0px 0px red;
+    }
+    50% {
+        box-shadow: 0px 0px 30px red;
+    }
+    100% {
+        box-shadow: 0px 0px 0px red;
+    }
+}
+.buttonTooltip{
+    all: unset;
+    font-size: 16px;
+    width: 150px;
+    height: 50px;
+    background-color: rgba(0, 128, 0, 0);
+    text-align: center;
+    box-shadow: 0px 0px 15px white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 1s ease;
+    margin-top: 40px;
+}
+.tooltipButton{
+    width: 70%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.buttonTooltip:hover{
+    background-color: rgba(182, 181, 181, 0.515);
+}
+.hidePayment{
+    display: none !important;
+}

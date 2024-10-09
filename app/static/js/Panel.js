@@ -101,6 +101,11 @@ MD.Panel = function(){
   });
 
   $('#startnest').on('click', function() {
+    const isPremium = Number(localStorage.getItem('isPremium'));
+    if (![1,2,3,4].includes(isPremium)) {
+      showPremiumNeed()
+      return;
+    }
     var elems = editor.selected;
     if (!elems || elems.length === 0) {
         console.error('No elements selected.');
@@ -545,4 +550,7 @@ if ((elem && !isNode) || multiselected) {
 
   this.show = show;
   this.updateContextPanel = updateContextPanel;
+}
+function showPremiumNeed(){
+  document.getElementById('tooltip').classList.add('tooltipShow')
 }

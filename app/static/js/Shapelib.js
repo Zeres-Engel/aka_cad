@@ -144,7 +144,11 @@ MD.Shapelib = function(){
       // Do mouseup on parent element rather than each button
       $('#shape_buttons').mouseup(function(evt) {
         var btn = $(evt.target).closest('div.tool_button');
-        
+        const isPremium = Number(localStorage.getItem('isPremium'));
+        if (![1,2,3,4].includes(isPremium)) {
+          showPremiumNeed()
+          return;
+        }
         if(!btn.length) return;
         
         var copy = btn.children().clone().attr({width: 24, height: 24});
@@ -316,4 +320,7 @@ MD.Shapelib = function(){
       }
     }   
   }
+}
+function showPremiumNeed(){
+  document.getElementById('tooltip').classList.add('tooltipShow')
 }
