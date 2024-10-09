@@ -162,6 +162,39 @@ function openTutorial(){
         navItem[navItem.length-1].classList.add('openReturn')
     },1000)
 }
-function paymentRequest(price) {
-    
+function paymentRequest(amount) {
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    const userId = localStorage.getItem('user_id'); // Lấy user_id từ localStorage
+
+    if (!userId) {
+        // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+        alert('Bạn cần đăng nhập trước khi thực hiện thanh toán.');
+        window.location.href = '/'; // Giả định đường dẫn đến trang đăng nhập là '/login'
+        return;
+    }
+
+    // Gửi yêu cầu thanh toán tới server
+    fetch('/payment/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: userId,  // Truyền user_id của người dùng
+            amount: amount    // Giá tiền gói dịch vụ
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.payment_url) {
+            // Chuyển người dùng đến trang thanh toán của PayOS
+            window.location.href = data.payment_url;
+        } else {
+            alert('Tạo thanh toán không thành công: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Yêu cầu thanh toán thất bại:', error);
+        alert('Lỗi trong quá trình xử lý thanh toán. Vui lòng thử lại.');
+    });
 }
