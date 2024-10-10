@@ -95,7 +95,7 @@ function handleLogin(event) {
             localStorage.setItem('isPremium', data.premium_id);
             localStorage.setItem('email', data.email);
             updateUserUI(data.username, data.email, data.isPremium);
-            
+            checkIfUserLogin();
             if (data.svg_content) {
                 loadSVGContent(data.svg_content);
             }
@@ -114,7 +114,34 @@ function handleLogin(event) {
         alert("An error occurred. Please try again.");
     });
 }
+function checkIfUserLogin(){
+    const username = localStorage.getItem('username');
+    const loginStatusDiv = document.getElementById('logoutStatus');
+    if ( username) {
+        loginStatusDiv.innerHTML = '<div class="menu_item" id="handleLogout" onclick="handleLogout()">Log out</div>';
+    }   else {
+        // Nếu chưa đăng nhập, hiển thị nút hoặc thông báo đăng nhập lại
+        loginStatusDiv.innerHTML = '';
+    }
+}
+function checkIfUserTrial() {
+    const userId = localStorage.getItem('user_id');
+    const username = localStorage.getItem('username');
+    const loginStatusDiv = document.getElementById('loginStatus');
+    
+    if (userId && username) {
+        loginStatusDiv.innerHTML = ''; // Xóa nội dung của div
 
+    } else {
+        // Nếu chưa đăng nhập, hiển thị nút hoặc thông báo đăng nhập lại
+        loginStatusDiv.innerHTML = '<div class="menu_item" id="relogin" onclick="relogin()">Re-login</div>';
+    }
+}
+function relogin() {
+    // Thực hiện hành động đăng nhập lại
+    alert("Please login again.");
+    window.location.href = "/"
+}
 function handleLogout() {
     console.log("Logout function called");
 
