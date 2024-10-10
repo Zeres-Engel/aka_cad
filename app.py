@@ -45,6 +45,7 @@ def login():
         return jsonify({
             "message": "Login successful",
             "user_id": str(user['_id']),
+            "email": user['email'],
             "username": user['username'],
             "premium_id": user['premium_id'],
             "svg_content": svg_content

@@ -94,7 +94,7 @@ function handleLogin(event) {
             localStorage.setItem('username', data.username);
             localStorage.setItem('isPremium', data.premium_id);
             localStorage.setItem('email', data.email);
-            updateUserUI(data.username, data.email, data.isPremium);
+            updateUserUI(data.username, data.email, data.premium_id);
             checkIfUserLogin();
             if (data.svg_content) {
                 loadSVGContent(data.svg_content);
@@ -134,12 +134,11 @@ function checkIfUserTrial() {
 
     } else {
         // Nếu chưa đăng nhập, hiển thị nút hoặc thông báo đăng nhập lại
-        loginStatusDiv.innerHTML = '<div class="menu_item" id="relogin" onclick="relogin()">Re-login</div>';
+        loginStatusDiv.innerHTML = '<div class="menu_item" id="relogin" onclick="relogin()">Login</div>';
     }
 }
 function relogin() {
     // Thực hiện hành động đăng nhập lại
-    alert("Please login again.");
     window.location.href = "/"
 }
 function handleLogout() {
