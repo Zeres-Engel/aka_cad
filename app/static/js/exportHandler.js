@@ -11,7 +11,7 @@ function exportHandler(window, data) {
   canvg(c, data.svg, {renderCallback: function() {
     var datauri = c.toDataURL('image/png');  
     if (!datauri) return false;
-    var filename = "Method Draw Image";
+    var filename = "EcoDesign Image";
     var type = 'image/png';
     var file = svgedit.utilities.dataURItoBlob(datauri, type);
     if (window.navigator.msSaveOrOpenBlob) // IE10+

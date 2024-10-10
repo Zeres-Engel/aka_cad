@@ -7,7 +7,7 @@ editor.modal = {
   about: new MD.Modal({
     html: `
       <h1>About this application</h1>
-      <p>Method Draw is a simple <a href="https://github.com/methodofaction/Method-Draw">open source</a> vector drawing application. Method Draw was forked from <a href="https://github.com/SVG-Edit/svgedit">SVG-Edit</a> several years ago with the goal of improving and modernizing the interface.</p>
+      <p>EcoDesign is designed to streamline your workflow and enhance your creativity, ensuring that every project is not only visually stunning but also economically feasible. Whether you're tweaking a simple vector or designing intricate layouts, EcoDesign provides the tools you need to succeed. Upgrade to EcoDesign Premium for advanced features that help you push the boundaries of design and achieve meticulous, cost-effective results.</p>
       `
   }),
   source: new MD.Modal({
@@ -69,7 +69,7 @@ editor.modal = {
     html: `
       <h1>Donate</h1>
       <p>
-        Method Draw relies on your generous donations for continued development.
+        EcoDesign relies on your generous donations for continued development.
         <a href="https://method.ac/donate/">Donate now</a> if you find this application useful.
       </p>`
   }),
