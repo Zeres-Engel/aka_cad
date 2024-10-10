@@ -185,8 +185,5 @@ def save_svg_source():
     return jsonify({"message": "SVG source saved successfully"}), 200
 
 if __name__ == '__main__':
-    # db_manager.initialize_database()
-    try:
-        app.run(host='0.0.0.0', port=5000, debug=True)
-    finally:
-        db_manager.close_connection()
+    app.run(host='0.0.0.0', port=5000, debug=False)
+    db_manager.close_connection()
