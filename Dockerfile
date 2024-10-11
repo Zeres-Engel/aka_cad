@@ -43,3 +43,20 @@ EXPOSE 80 5000
 
 # Enter into a shell when running the container
 CMD ["/bin/bash"]
+
+# docker run -d --name ecologicaldesign_container -p 80:80 -p 5000:5000 -v /home/aka_cad:/app/aka_cad --restart unless-stopped ecologicaldesign /bin/bash -c "service nginx start && tmux new-session -d -s ecologicaldesign 'gunicorn -c /app/aka_cad/gunicorn.conf.py app:app' && /app/aka_cad/check_and_restart.sh"
+# echo "server {
+#     listen 80;
+#     server_name ecologicaldesign.tech;
+
+#     location / {
+#         proxy_pass http://127.0.0.1:5000;
+#         proxy_set_header Host \$host;
+#         proxy_set_header X-Real-IP \$remote_addr;
+#     }
+# }" > /etc/nginx/sites-available/ecologicaldesign
+
+# rm /etc/nginx/sites-enabled/default
+# ln -s /etc/nginx/sites-available/ecologicaldesign /etc/nginx/sites-enabled/
+# nginx -t
+# service nginx restart
