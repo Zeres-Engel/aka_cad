@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        VERSION: ${VERSION:-latest}
+    image: ecologicaldesign:${VERSION:-latest}
+    ports:
+      - "80:80"
+      - "5000:5000"
+    volumes:
+      - ./aka_cad:/app/aka_cad
+    restart: unless-stopped
+    command: >
+      /bin/bash -c "
+        service nginx start &&
+        tmux new-session -d -s ecologicaldesign 'gunicorn -c /app/aka_cad/gunicorn.conf.py app:app' &&
+        /app/aka_cad/check_and_restart.sh
+      "

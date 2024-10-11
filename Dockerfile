@@ -1,6 +1,9 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
 
+# Thêm dòng này ở đầu Dockerfile
+ARG VERSION=latest
+
 # Set the working directory to /app
 WORKDIR /app
 
@@ -60,3 +63,6 @@ CMD ["/bin/bash"]
 # ln -s /etc/nginx/sites-available/ecologicaldesign /etc/nginx/sites-enabled/
 # nginx -t
 # service nginx restart
+
+# Thêm label cho version
+LABEL version=$VERSION
