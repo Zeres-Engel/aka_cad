@@ -9,9 +9,9 @@ class DBManager:
     def __init__(self, connection_string):
         self.client = MongoClient(connection_string)
         self.db = self.client['ecodesign_db']
-        self.user_manager = UserManager(self.db)
-        self.svg_manager = SVGeditorManager(self.db)
         self.payment_manager = PaymentManager(self.db)
+        self.user_manager = UserManager(self.db, self.payment_manager)
+        self.svg_manager = SVGeditorManager(self.db)
         self.premium_manager = PremiumManager(self.db)
 
     def initialize_database(self):

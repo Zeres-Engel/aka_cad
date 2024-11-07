@@ -40,3 +40,9 @@ class PaymentManager:
 
     def clear_collection(self):
         self.collection.delete_many({})
+
+    def get_latest_payment(self, user_id):
+        return self.collection.find_one(
+            {'user_id': ObjectId(user_id)},
+            sort=[('payment_date', -1)]
+        )

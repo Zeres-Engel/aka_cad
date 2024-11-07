@@ -1,10 +1,11 @@
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class UserManager:
-    def __init__(self, db):
+    def __init__(self, db, payment_manager):
         self.collection = db['users']
+        self.payment_manager = payment_manager
 
     def create_user(self, username, password, email):
         existing_username = self.get_user_by_username(username)
@@ -19,11 +20,18 @@ class UserManager:
             'username': username,
             'password': generate_password_hash(password),
             'email': email,
-            'premium_id': 1,  
-            'premium_start_date': datetime.utcnow(),
-            'remain_days': 7
+            'premium_id': 1,  # Mặc định là gói Trial
+            'registration_date': datetime.utcnow()  # Thêm ngày đăng ký
         }
         result = self.collection.insert_one(user)
+        
+        self.payment_manager.create_payment(
+            user_id=str(result.inserted_id),
+            amount=0,
+            payment_method='None',
+            premium_type_id=1
+        )
+        
         return str(result.inserted_id), None
 
     def update_premium_status(self, user_id, premium_id):
@@ -49,12 +57,6 @@ class UserManager:
     def authenticate_user(self, username_or_email, password):
         user = self.get_user_by_username(username_or_email) or self.get_user_by_email(username_or_email)
         if user and check_password_hash(user['password'], password):
-            remain_days = self.update_remain_days(str(user['_id']))
-            user['remain_days'] = remain_days
-            
-            if remain_days == 0 and user['premium_id'] == 1:
-                self.update_premium_status(str(user['_id']), 0)
-                user['premium_id'] = 0
             return user
         return None
 
@@ -63,38 +65,3 @@ class UserManager:
 
     def remove_fullname_field(self):
         self.collection.update_many({}, {'$unset': {'fullname': ''}})
-
-    def update_remain_days(self, user_id):
-        user = self.get_user(user_id)
-        if not user:
-            return None
-        
-        if user['premium_id'] == 0:
-            return 0
-            
-        current_date = datetime.utcnow()
-        
-        # Trial account
-        if user['premium_id'] == 1:
-            start_date = user['premium_start_date']
-            remain = 7 - (current_date - start_date).days
-            
-            updates = {'remain_days': max(0, remain)}
-            if remain <= 0:
-                updates['premium_id'] = 0
-                
-            self.collection.update_one(
-                {'_id': ObjectId(user_id)},
-                {'$set': updates}
-            )
-            return max(0, remain)
-                
-        # Paid premium accounts
-        elif user['premium_id'] in [2, 3, 4, 5]:
-            # Thêm logic xử lý cho các gói premium có thời hạn
-            payment = self.payment_manager.get_latest_payment(user_id)
-            if payment:
-                # Tính ngày còn lại dựa trên gói đăng ký
-                pass
-                
-        return None

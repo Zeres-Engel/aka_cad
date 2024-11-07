@@ -88,13 +88,14 @@ function handleLogin(event) {
     })
     .then(response => response.json())
     .then(data => {
+        console.log("Login response data:", data);
         if (data.message === "Login successful") {
             alert("Login successful");
             localStorage.setItem('user_id', data.user_id);
             localStorage.setItem('username', data.username);
             localStorage.setItem('isPremium', data.premium_id);
             localStorage.setItem('email', data.email);
-            updateUserUI(data.username, data.email, data.premium_id);
+            updateUserUI(data.username, data.email, data.premium_id, data.remain_days);
             checkIfUserLogin();
             if (data.svg_content) {
                 loadSVGContent(data.svg_content);
@@ -360,13 +361,13 @@ function paymentRequest(premium_id) {
     });
 }
 
-function updateUserUI(username, email, premium_id) {
-    // Lấy phần tử HTML để hiển thị thông tin người dùng
+function updateUserUI(username, email, premium_id, remain_days) {
     const userInfoDisplay = document.getElementById('user_info_display');
     userInfoDisplay.innerHTML = `
         <strong>Username:</strong> ${username} <br>
         <strong>Email:</strong> ${email} <br>
-        <strong>Premium ID:</strong> ${premium_id}
+        <strong>Premium ID:</strong> ${premium_id} <br>
+        ${remain_days !== null ? `<strong>Remaining Days:</strong> ${remain_days} <br>` : ''}
     `;
 }
 

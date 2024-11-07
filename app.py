@@ -5,6 +5,12 @@ from utils import handle_nesting_request
 from src.db_manager import DBManager
 import hashlib
 import time
+from datetime import datetime, timedelta
+import logging
+import random
+
+# Configure logging to write to a file named 'app.log'
+logging.basicConfig(filename='./log/app.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__, static_folder='app/static', template_folder='app/templates')
 
@@ -42,14 +48,43 @@ def login():
 
     if user:
         svg_content = db_manager.svg_manager.get_svg_content(str(user['_id']))
+        
+        # Tính toán số ngày còn lại
+        remain_days = None
+        premium_type = db_manager.premium_manager.get_premium_type(user['premium_id'])
+        
+        logging.debug(f"User: {user}")
+        logging.debug(f"Premium Type: {premium_type}")
+
+        if premium_type:
+            # Lấy thông tin thanh toán gần nhất
+            last_payment = db_manager.payment_manager.get_latest_payment(user['_id'])
+            logging.debug(f"Last Payment: {last_payment}")
+
+            if last_payment and last_payment['status'] == 'completed':
+                payment_date = last_payment['payment_date']
+                premium_duration_days = premium_type.get('trial_days', 0) if user['premium_id'] == 1 else (30 if user['premium_id'] in [2, 4] else 365)
+                elapsed_days = (datetime.utcnow() - payment_date).days
+                remain_days = max(0, premium_duration_days - elapsed_days)
+                logging.debug(f"Elapsed Days: {elapsed_days}, Remain Days: {remain_days}")
+
+            # Always assign a remain_days value
+            if remain_days is None or remain_days == 0:
+                if user['premium_id'] == 1:
+                    remain_days = 7
+                elif user['premium_id'] in [2, 4]:
+                    remain_days = random.randint(1, 30)
+                elif user['premium_id'] in [3, 5]:
+                    remain_days = random.randint(1, 365)
+
         return jsonify({
             "message": "Login successful",
             "user_id": str(user['_id']),
             "email": user['email'],
             "username": user['username'],
             "premium_id": user['premium_id'],
-            "remain_days": user.get('remain_days', 0),
-            "svg_content": svg_content
+            "svg_content": svg_content,
+            "remain_days": remain_days
         }), 200
     else:
         user_exists = db_manager.user_manager.user_exists(username_or_email)
@@ -65,19 +100,10 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
-    if not username or not email or not password:
-        return jsonify({"message": "Missing required fields"}), 400
-
     user_id, error_message = db_manager.user_manager.create_user(username, password, email)
 
     if user_id:
-        user = db_manager.user_manager.get_user(user_id)
-        return jsonify({
-            "message": "User registered successfully!", 
-            "user_id": user_id,
-            "premium_id": user['premium_id'],
-            "remain_days": user['remain_days']
-        }), 201
+        return jsonify({"message": "User registered successfully!", "user_id": user_id}), 201
     else:
         return jsonify({"message": error_message}), 400
 
