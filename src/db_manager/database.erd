@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 0,
-    "scrollLeft": -38.4294,
-    "zoomLevel": 1,
+    "scrollTop": -48.5538,
+    "scrollLeft": -73.2354,
+    "zoomLevel": 0.91,
     "show": 431,
     "database": 4,
     "databaseName": "",
@@ -56,14 +56,16 @@
           "jth75A7V3AN7wEuMvWWCh",
           "ycUcJWhP8OsmwEMkhsSNe",
           "eDs4D1JCPA7676cs-wmWD",
-          "2QQPEBQarv6sW2lekYknk"
+          "2QQPEBQarv6sW2lekYknk",
+          "OYxvhCkwDuOlHfk8XgCev"
         ],
         "seqColumnIds": [
           "iz-TGOR1LUtklHaEIY4eb",
           "jth75A7V3AN7wEuMvWWCh",
           "ycUcJWhP8OsmwEMkhsSNe",
           "eDs4D1JCPA7676cs-wmWD",
-          "2QQPEBQarv6sW2lekYknk"
+          "2QQPEBQarv6sW2lekYknk",
+          "OYxvhCkwDuOlHfk8XgCev"
         ],
         "ui": {
           "x": 177,
@@ -74,7 +76,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1728501165223,
+          "updateAt": 1730982092286,
           "createAt": 1728501162070
         }
       },
@@ -550,6 +552,26 @@
           "updateAt": 1728501162080,
           "createAt": 1728501162080
         }
+      },
+      "OYxvhCkwDuOlHfk8XgCev": {
+        "id": "OYxvhCkwDuOlHfk8XgCev",
+        "tableId": "il-NoyUM3dy0-t89aVLLl",
+        "name": "dayremain",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1730982112635,
+          "createAt": 1730982092286
+        }
       }
     },
     "relationshipEntities": {
@@ -592,7 +614,7 @@
             "iz-TGOR1LUtklHaEIY4eb"
           ],
           "x": 575,
-          "y": 669,
+          "y": 681,
           "direction": 2
         },
         "end": {
@@ -670,5 +692,15 @@
     "indexColumnEntities": {},
     "memoEntities": {}
   },
-  "lww": {}
+  "lww": {
+    "OYxvhCkwDuOlHfk8XgCev": [
+      "tableColumnEntities",
+      1730982092284,
+      -1,
+      {
+        "name": 1730982110179,
+        "dataType": 1730982112634
+      }
+    ]
+  }
 }

@@ -1,5 +1,6 @@
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
 
 class UserManager:
     def __init__(self, db):
@@ -18,7 +19,9 @@ class UserManager:
             'username': username,
             'password': generate_password_hash(password),
             'email': email,
-            'premium_id': 0  # Mặc định là gói Free
+            'premium_id': 1,  
+            'premium_start_date': datetime.utcnow(),
+            'remain_days': 7
         }
         result = self.collection.insert_one(user)
         return str(result.inserted_id), None
@@ -46,6 +49,12 @@ class UserManager:
     def authenticate_user(self, username_or_email, password):
         user = self.get_user_by_username(username_or_email) or self.get_user_by_email(username_or_email)
         if user and check_password_hash(user['password'], password):
+            remain_days = self.update_remain_days(str(user['_id']))
+            user['remain_days'] = remain_days
+            
+            if remain_days == 0 and user['premium_id'] == 1:
+                self.update_premium_status(str(user['_id']), 0)
+                user['premium_id'] = 0
             return user
         return None
 
@@ -54,3 +63,36 @@ class UserManager:
 
     def remove_fullname_field(self):
         self.collection.update_many({}, {'$unset': {'fullname': ''}})
+
+    def update_remain_days(self, user_id):
+        user = self.get_user(user_id)
+        if not user:
+            return None
+        
+        if user['premium_id'] == 0:
+            return 0
+            
+        if user['premium_id'] == 1:
+            start_date = user['premium_start_date']
+            current_date = datetime.utcnow()
+            remain = 7 - (current_date - start_date).days
+            
+            if remain <= 0:
+                self.collection.update_one(
+                    {'_id': ObjectId(user_id)},
+                    {
+                        '$set': {
+                            'premium_id': 0,
+                            'remain_days': 0
+                        }
+                    }
+                )
+                return 0
+                
+            self.collection.update_one(
+                {'_id': ObjectId(user_id)},
+                {'$set': {'remain_days': remain}}
+            )
+            return remain
+            
+        return None

@@ -48,6 +48,7 @@ def login():
             "email": user['email'],
             "username": user['username'],
             "premium_id": user['premium_id'],
+            "remain_days": user.get('remain_days', 0),
             "svg_content": svg_content
         }), 200
     else:
@@ -64,10 +65,19 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
+    if not username or not email or not password:
+        return jsonify({"message": "Missing required fields"}), 400
+
     user_id, error_message = db_manager.user_manager.create_user(username, password, email)
 
     if user_id:
-        return jsonify({"message": "User registered successfully!", "user_id": user_id}), 201
+        user = db_manager.user_manager.get_user(user_id)
+        return jsonify({
+            "message": "User registered successfully!", 
+            "user_id": user_id,
+            "premium_id": user['premium_id'],
+            "remain_days": user['remain_days']
+        }), 201
     else:
         return jsonify({"message": error_message}), 400
 
