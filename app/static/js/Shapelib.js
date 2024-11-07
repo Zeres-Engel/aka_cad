@@ -75,7 +75,7 @@ MD.Shapelib = function(){
     
     var lib = library[cat_id];
     const isPremium = Number(localStorage.getItem('isPremium'));
-    if (![1,2,3,4].includes(isPremium) && isPremiumArr.includes(cat_id)) {
+    if (![1,2,3,4,5].includes(isPremium) && isPremiumArr.includes(cat_id)) {
       showPremiumNeed()
       return;
     }

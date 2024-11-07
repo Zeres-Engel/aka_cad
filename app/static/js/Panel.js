@@ -102,7 +102,7 @@ MD.Panel = function(){
 
   $('#startnest').on('click', function() {
     const isPremium = Number(localStorage.getItem('isPremium'));
-    if (![1,2,3,4].includes(isPremium)) {
+    if (![1,2,3,4,5].includes(isPremium)) {
       showPremiumNeed()
       return;
     }

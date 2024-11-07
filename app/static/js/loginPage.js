@@ -101,6 +101,7 @@ function handleLogin(event) {
             }
             
             closeHomePage();
+            setTimeout(()=>{document.getElementById('RecommendTooltip').classList.add('tooltipShow')},1500)
         } else if (data.message === "Incorrect password") {
             alert("Login failed: Incorrect password");
         } else if (data.message === "Account does not exist in the system") {
@@ -304,7 +305,7 @@ function openQuestion(ulNo) {
     }
 function openTutorial(type = 0) {
   const isPremium = Number(localStorage.getItem('isPremium'));
-  if (![1,2,3,4].includes(isPremium) && type === 1) {
+  if (![1,2,3,4,5].includes(isPremium) && type === 1) {
     document.getElementById('tutorialContainer').classList.add('hidePayment')
     document.getElementById('questionAnswer').classList.add('hidePayment')
     document.getElementById('contactContainer').classList.add('hidePayment')
@@ -314,7 +315,7 @@ function openTutorial(type = 0) {
     document.getElementById('contactContainer').classList.remove('hidePayment')
   }
   document.getElementById("homePage").classList.remove("homePageClose");
-  closeTooltip()
+  closeTooltip(0)
   setTimeout(() => {
     document
       .getElementById("homePageHeader")
@@ -381,13 +382,13 @@ window.onload = function() {
 
 function showPremiumNeedNesting(){
     const isPremium = Number(localStorage.getItem('isPremium'));
-    if (![1,2,3,4].includes(isPremium)) {
+    if (![1,2,3,4,5].includes(isPremium)) {
         document.getElementById('tooltip').classList.add('tooltipShow')
         return;
       }
   }
-  function closeTooltip(){
-    document.getElementById('tooltip').classList.remove('tooltipShow')
+  function closeTooltip(typeTooltip){
+    typeTooltip === 0 ? document.getElementById('tooltip').classList.remove('tooltipShow') : document.getElementById('RecommendTooltip').classList.remove('tooltipShow')
     return;
 }
   localStorage.clear();
