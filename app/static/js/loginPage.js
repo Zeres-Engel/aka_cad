@@ -360,13 +360,28 @@ function paymentRequest(premium_id) {
     });
 }
 
+function getPremiumTypeName(premium_id) {
+    switch (Number(premium_id)) {
+        case 1:
+            return "Trial";
+        case 2:
+        case 3:
+            return "Cá Nhân";
+        case 4:
+        case 5:
+            return "Doanh Nghiệp";
+        default:
+            return "Free";
+    }
+}
+
 function updateUserUI(username, email, premium_id) {
-    // Lấy phần tử HTML để hiển thị thông tin người dùng
     const userInfoDisplay = document.getElementById('user_info_display');
+    const premiumType = getPremiumTypeName(premium_id);
     userInfoDisplay.innerHTML = `
         <strong>Username:</strong> ${username} <br>
         <strong>Email:</strong> ${email} <br>
-        <strong>Premium ID:</strong> ${premium_id}
+        <strong>Premium:</strong> ${premiumType}
     `;
 }
 
