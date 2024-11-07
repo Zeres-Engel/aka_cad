@@ -72,27 +72,29 @@ class UserManager:
         if user['premium_id'] == 0:
             return 0
             
+        current_date = datetime.utcnow()
+        
+        # Trial account
         if user['premium_id'] == 1:
             start_date = user['premium_start_date']
-            current_date = datetime.utcnow()
             remain = 7 - (current_date - start_date).days
             
+            updates = {'remain_days': max(0, remain)}
             if remain <= 0:
-                self.collection.update_one(
-                    {'_id': ObjectId(user_id)},
-                    {
-                        '$set': {
-                            'premium_id': 0,
-                            'remain_days': 0
-                        }
-                    }
-                )
-                return 0
+                updates['premium_id'] = 0
                 
             self.collection.update_one(
                 {'_id': ObjectId(user_id)},
-                {'$set': {'remain_days': remain}}
+                {'$set': updates}
             )
-            return remain
-            
+            return max(0, remain)
+                
+        # Paid premium accounts
+        elif user['premium_id'] in [2, 3, 4, 5]:
+            # Thêm logic xử lý cho các gói premium có thời hạn
+            payment = self.payment_manager.get_latest_payment(user_id)
+            if payment:
+                # Tính ngày còn lại dựa trên gói đăng ký
+                pass
+                
         return None
