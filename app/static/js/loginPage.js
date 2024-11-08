@@ -94,7 +94,7 @@ function handleLogin(event) {
             localStorage.setItem('username', data.username);
             localStorage.setItem('isPremium', data.premium_id);
             localStorage.setItem('email', data.email);
-            updateUserUI(data.username, data.email, data.premium_id);
+            updateUserUI(data.username, data.email, data.premium_id, data.remain_days);
             checkIfUserLogin();
             if (data.svg_content) {
                 loadSVGContent(data.svg_content);
@@ -375,16 +375,15 @@ function getPremiumTypeName(premium_id) {
     }
 }
 
-function updateUserUI(username, email, premium_id) {
-    const userInfoDisplay = document.getElementById('user_info_display');
-    const premiumType = getPremiumTypeName(premium_id);
-    userInfoDisplay.innerHTML = `
-        <strong>Username:</strong> ${username} <br>
-        <strong>Email:</strong> ${email} <br>
-        <strong>Premium:</strong> ${premiumType}
-    `;
+function updateUserUI(username, email, premium_id, remain_days) {
+  const userInfoDisplay = document.getElementById('user_info_display');
+  userInfoDisplay.innerHTML = `
+      <strong>Username:</strong> ${username} <br>
+      <strong>Email:</strong> ${email} <br>
+      <strong>Premium ID:</strong> ${premium_id} <br>
+      ${remain_days !== null ? `<strong>Remaining Days:</strong> ${remain_days} <br>` : ''}
+  `;
 }
-
 // Tự động tải thông tin người dùng nếu đã có trong localStorage (ví dụ: khi tải lại trang)
 window.onload = function() {
     const savedUsername = localStorage.getItem('username');
